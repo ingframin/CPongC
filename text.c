@@ -1,6 +1,6 @@
 #include "text.h"
 #include <string.h>
-const char* ab = " 0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyzàáèéìíòóùú&@#'(§!ç)°-_*$£%=+~:;.,?<>ÁÀÉÈÍÌÓÒÚÙâêîôûÂÊÎÔÛ€ãñöïëäüÿ\0";
+char* ab = " 0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyzàáèéìíòóùú&@#'(§!ç)°-_*$£%=+~:;.,?<>ÁÀÉÈÍÌÓÒÚÙâêîôûÂÊÎÔÛ€ãñöïëäüÿ";
 
 void initTextRenderer(TextRenderer* tR,char* fontname,SDL_Renderer* rnd, int size, SDL_Color color){
     TTF_Init();
@@ -14,11 +14,11 @@ void initTextRenderer(TextRenderer* tR,char* fontname,SDL_Renderer* rnd, int siz
     int w,h;
     SDL_QueryTexture(tR->chrSheet, NULL, NULL, &w, &h);
 
-    tR->chrW = 1+w/strlen(ab);
+    tR->chrW = 1+w/127;
     tR->chrH = h;
     tR->chrRect.x = 0;
     tR->chrRect.y = 0;
-    tR->chrRect.w = w/strlen(ab);
+    tR->chrRect.w = w/127;
     tR->chrRect.h = h;
 
     SDL_FreeSurface(alphabet_surf);
@@ -30,7 +30,7 @@ void initTextRenderer(TextRenderer* tR,char* fontname,SDL_Renderer* rnd, int siz
 //still inefficient, must be updated.
 
 int pick(TextRenderer* tR,char c){
-    for(int i=0;i<strlen(ab);i++){
+    for(int i=0;i<127;i++){
         if(ab[i]==c){
             return i*tR->chrW;
         }

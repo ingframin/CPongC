@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
+#include <string.h>
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -24,8 +26,8 @@ int running = 1;
 TextRenderer txt;
 SDL_Rect score_p1_rect = {0,0,32,32};
 SDL_Rect score_p2_rect = {800-64,0,32,32};
-char p1_score[3];
-char p2_score[3];
+char p1_score[255];
+char p2_score[255];
 
 //time step
 Uint32 dt;
@@ -40,8 +42,8 @@ SDL_Rect BallRect = {100,100,25,25};
 SDL_Rect Player1Name = {0,28,20,20};
 SDL_Rect Player2Name = {640,28,20,20};
 //Colors used for rendering
-SDL_Color White = {255, 255, 255};
-SDL_Color Shade = {255, 128, 10};
+SDL_Color White = {255, 255, 255,255};
+SDL_Color Shade = {255, 128, 10,255};
 
 Player* player1;
 Player* player2;
@@ -188,8 +190,8 @@ void gameLoop(){
 		}
 
         //Convert scores to string
-        sprintf(p1_score,"%d",player1->score);
-        sprintf(p2_score,"%d",player2->score);
+        snprintf(p1_score,255,"%d",player1->score);
+        snprintf(p2_score,255,"%d",player2->score);
 
         render();
 
@@ -223,7 +225,7 @@ void quitGame(){
     SDL_Quit();
 }
 
-int main(int argc, char* arrgv[])
+int main(int argc, char* argv[])
 {
 
     State main_state;

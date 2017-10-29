@@ -190,8 +190,8 @@ void gameLoop(){
 		}
 
         //Convert scores to string
-        snprintf(p1_score,255,"%d",player1->score);
-        snprintf(p2_score,255,"%d",player2->score);
+        snprintf(p1_score,200,"%d",player1->score);
+        snprintf(p2_score,200,"%d",player2->score);
 
         render();
 

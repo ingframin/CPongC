@@ -5,6 +5,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "player.h"
 #include "ball.h"
@@ -32,7 +33,7 @@ char p2_score[255];
 //time step
 Uint32 dt;
 
-//texture batchn ²,²
+//texture batchn ï¿½,ï¿½
 SDL_Texture* textures[4];
 
 //Where are the sprites?
@@ -49,13 +50,23 @@ Player* player1;
 Player* player2;
 Ball* ball;
 
+int audio_rate = 44100;
+Uint16 audio_format = AUDIO_S16SYS;
+int audio_channels = 1;
+int audio_buffers = 2048;
+Mix_Chunk *sound = NULL;
+Mix_Chunk *sound_wall = NULL;
+Mix_Chunk *music = NULL;
+
+int channel;
+
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
 //Error checking is still missing
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height,SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_FULLSCREEN);
 
     renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
 
@@ -69,6 +80,13 @@ void initGame(const char* title,int width,int height){
     textures[1] = loadTexture(renderer,"textures/wall.png");
     textures[2] = loadTexture(renderer,"textures/player1.png");
     textures[3] = loadTexture(renderer,"textures/player2.png");
+
+    //Init audio
+    Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
+
+    sound = Mix_LoadWAV("hit.wav");
+    sound_wall = Mix_LoadWAV("wall_hit.wav");
+    music = Mix_LoadWAV("music.wav");
 
 }
 
@@ -109,6 +127,10 @@ void gameLoop(){
         const Uint8* keys = SDL_GetKeyboardState(NULL);
 
         //player 2
+        if(keys[SDL_SCANCODE_ESCAPE]){
+                   running = 0;
+               }
+
         if(keys[SDL_SCANCODE_UP]){
             movePlayer(player2,UP);
             pd2 = UP;
@@ -160,13 +182,14 @@ void gameLoop(){
         if(checkCollision(ball->rect,WallRect1)||checkCollision(ball->rect,WallRect2)){
 
             ball->y_speed = -(ball->y_speed);
+            channel = Mix_PlayChannel(1, sound_wall, 0);
 
         }
 
         if(checkCollision(ball->rect,player1->position)){
             ball->x_speed = -(ball->x_speed);
-
             ball->y_speed += pd1;
+            channel = Mix_PlayChannel(1, sound, 0);
 
         }
 
@@ -174,6 +197,7 @@ void gameLoop(){
         if(checkCollision(ball->rect,player2->position)){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd2;
+            channel = Mix_PlayChannel(1, sound, 0);
 
         }
 
@@ -217,6 +241,10 @@ void quitGame(){
     SDL_DestroyTexture(txt.chrSheet);
 
     //Quit modules
+    Mix_FreeChunk(sound);
+    Mix_FreeChunk(sound_wall);
+
+    Mix_CloseAudio();
     TTF_Quit();
     IMG_Quit();
     SDL_FreeSurface(icon);
@@ -250,6 +278,7 @@ int main(int argc, char* argv[])
     initPlayer(player1,1,5,2);
     initPlayer(player2,2,5,3);
     initBall(ball,0);
+    Mix_PlayChannel(2, music, 0);
     main_state.loop();
 
     main_state.quit();

@@ -1,0 +1,29 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "main.c","ball.h","ball.c","player.h","player.c","text.h","text.c","utils.h","utils.c",
+                "-L./SDL2/lib",
+                "-I./SDL2/include/",
+                "-lmingw32",
+                "-lSDL2main",
+                "-lSDL2",
+                "-lSDL2_image",
+                "-lSDL2_ttf",
+                "-lSDL2_mixer",
+                "-lOpengl32",
+                "-o./bin/Debug/pong.exe",
+                "-w",
+                "-Wextra",
+                "-Wfatal-errors"
+
+            ]
+        }
+    ]
+}

@@ -66,7 +66,7 @@ void initGame(const char* title,int width,int height){
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_FULLSCREEN);
+    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN);
 
     renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
 

@@ -1,10 +1,9 @@
 #include "text.h"
 #include <string.h>
-char* ab = "0123456789";
+//Space character and punctuation still missing
+const char* ab = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd, SDL_Color color){
-     
-    tR->clr = color;
+void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd){
 
     SDL_Surface* alphabet_surf = IMG_Load("textures/font_tile_set.png");
     tR->chrSheet = SDL_CreateTextureFromSurface(rnd,alphabet_surf);
@@ -12,11 +11,11 @@ void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd, SDL_Color color){
     int w,h;
     SDL_QueryTexture(tR->chrSheet, NULL, NULL, &w, &h);
 
-    tR->chrW = w/10;
+    tR->chrW = w/36;
     tR->chrH = h;
     tR->chrRect.x = 0;
     tR->chrRect.y = 0;
-    tR->chrRect.w = w/10;
+    tR->chrRect.w = w/36;
     tR->chrRect.h = h;
 
     SDL_FreeSurface(alphabet_surf);
@@ -27,7 +26,7 @@ void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd, SDL_Color color){
 //still inefficient, must be updated.
 
 int pick(TextRenderer* tR,char c){
-    for(int i=0;i<10;i++){
+    for(int i=0;i<36;i++){
         if(ab[i]==c){
             return i*tR->chrW;
         }

@@ -62,30 +62,29 @@ int channel;
 
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
-//Error checking is still missing
 
-    //SDL_Init(SDL_INIT_EVERYTHING);
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+    SDL_Init(SDL_INIT_EVERYTHING);
+    /* if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         // Unrecoverable error, exit here.
         printf("SDL_Init failed: %s\n", SDL_GetError());
-    }
+    } */
 
     window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN);
-    if (window == NULL) {
+    /* if (window == NULL) {
         // Unrecoverable error, exit here.
         printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
-    }
+    } */
 
     renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL) {
+    /* if (renderer == NULL) {
         // Unrecoverable error, exit here.
         printf("SDL_CreateRenderer failed: %s\n", SDL_GetError());
-    }   
+    }  */ 
 
     IMG_Init(IMG_INIT_PNG);
-    printf("IMG_Init: %s\n", IMG_GetError());
+    //printf("IMG_Init: %s\n", IMG_GetError());
     icon = IMG_Load("textures/icon.png");
-    printf("IMG_Load: %s\n", IMG_GetError());
+    //printf("IMG_Load: %s\n", IMG_GetError());
     SDL_SetWindowIcon(window,icon);
 
     textures[0] = loadTexture(renderer,"textures/ball.png");
@@ -95,13 +94,13 @@ void initGame(const char* title,int width,int height){
 
     //Init audio
     Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
-    printf("Mix_OpenAudio: %s\n", Mix_GetError());
+    //printf("Mix_OpenAudio: %s\n", Mix_GetError());
     sound = Mix_LoadWAV("hit.wav");
-    printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
+    //printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
     sound_wall = Mix_LoadWAV("wall_hit.wav");
-    printf("Mix_LoadWAV(\"wall_hit.wav\"): %s\n", Mix_GetError());
+    //printf("Mix_LoadWAV(\"wall_hit.wav\"): %s\n", Mix_GetError());
     music = Mix_LoadWAV("music.wav");
-     printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
+    //printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
 }
 
 void render(){
@@ -117,8 +116,8 @@ void render(){
 
         write(&txt,&score_p1_rect,p1_score,renderer);
         write(&txt,&score_p2_rect,p2_score,renderer);
-        //write(&txt,&Player1Name,"Player 1",renderer);
-        //write(&txt,&Player2Name,"Player 2",renderer);
+        write(&txt,&Player1Name,"PLAYER1",renderer);
+        write(&txt,&Player2Name,"PLAYER2",renderer);
         SDL_RenderPresent(renderer);
 
 }
@@ -284,10 +283,10 @@ int main(int argc, char* argv[])
     main_state.quit = &quitGame;
 
     main_state.init("F Pong",800,600);
-    printf("Main State Initialized\n");
+    //printf("Main State Initialized\n");
     //txt is global
-    initTextRenderer(&txt,renderer,White);
-    printf("Text Renderer Initialized\n");
+    initTextRenderer(&txt,renderer);
+    //printf("Text Renderer Initialized\n");
     Player p1;
     Player p2;
     Ball b;
@@ -299,7 +298,8 @@ int main(int argc, char* argv[])
     initPlayer(player1,1,5,2);
     initPlayer(player2,2,5,3);
     initBall(ball,0);
-    Mix_PlayChannel(2, music, 0);
+    Mix_Volume(2, 64);
+    Mix_PlayChannel(2, music, -1);
     main_state.loop();
 
     main_state.quit();

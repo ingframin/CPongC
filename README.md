@@ -7,6 +7,11 @@ A version of SDL2 (2.0.5) is included but I strongly suggest to download the las
 
 All the credits and a huge thank you for SDL2 go to Sam Lantiga, the defunct Loki Software and all the development team.
 
+## Controls
+
+Player 1 moves with E and D, player 2 moves with the directional arrows Up and Down.
+(I used E and D because they are in the same position on both AZERTY, QWERTZ and QUERTY keyboard). I do not have at the moment any plan to support other keyboard layouts.
+
 ## Build instructions
 
 In order to build the project, run from the main folder:

@@ -1,7 +1,7 @@
 #ifndef TEXT_H_INCLUDED
 #define TEXT_H_INCLUDED
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+
 typedef struct {
     int chrH;//Height of a char
     int chrW;//Width of a char
@@ -12,7 +12,7 @@ typedef struct {
 } TextRenderer;
 
 int pick(TextRenderer* tR,char c);
-void initTextRenderer(TextRenderer* tR,char* fontname,SDL_Renderer* rnd, int size, SDL_Color color);
+void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd, SDL_Color color);
 
 void write(TextRenderer* tR, SDL_Rect* pos,char* txt, SDL_Renderer* rnd);
 #endif // TEXT_H_INCLUDED

@@ -1,36 +1,33 @@
 #include "text.h"
 #include <string.h>
-char* ab = " 0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyzàáèéìíòóùú&@#'(§!ç)°-_*$£%=+~:;.,?<>ÁÀÉÈÍÌÓÒÚÙâêîôûÂÊÎÔÛ€ãñöïëäüÿ";
+char* ab = "0123456789";
 
-void initTextRenderer(TextRenderer* tR,char* fontname,SDL_Renderer* rnd, int size, SDL_Color color){
-    TTF_Init();
-    TTF_Font* font = TTF_OpenFont(fontname,size);
-
+void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd, SDL_Color color){
+     
     tR->clr = color;
 
-    SDL_Surface* alphabet_surf = TTF_RenderText_Solid(font, ab, tR->clr);
+    SDL_Surface* alphabet_surf = IMG_Load("textures/font_tile_set.png");
     tR->chrSheet = SDL_CreateTextureFromSurface(rnd,alphabet_surf);
 
     int w,h;
     SDL_QueryTexture(tR->chrSheet, NULL, NULL, &w, &h);
 
-    tR->chrW = 1+w/127;
+    tR->chrW = w/10;
     tR->chrH = h;
     tR->chrRect.x = 0;
     tR->chrRect.y = 0;
-    tR->chrRect.w = w/127;
+    tR->chrRect.w = w/10;
     tR->chrRect.h = h;
 
     SDL_FreeSurface(alphabet_surf);
-    TTF_CloseFont(font);
-    TTF_Quit();
+   
 }
 
 //private function to find the character index:
 //still inefficient, must be updated.
 
 int pick(TextRenderer* tR,char c){
-    for(int i=0;i<127;i++){
+    for(int i=0;i<10;i++){
         if(ab[i]==c){
             return i*tR->chrW;
         }

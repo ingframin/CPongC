@@ -25,8 +25,8 @@ int running = 1;
 
 //Strutures and strings to render score on screen
 TextRenderer txt;
-SDL_Rect score_p1_rect = {0,0,32,32};
-SDL_Rect score_p2_rect = {800-64,0,32,32};
+SDL_Rect score_p1_rect = {0,0,26,26};
+SDL_Rect score_p2_rect = {800-52,0,26,26};
 char p1_score[255];
 char p2_score[255];
 
@@ -64,16 +64,28 @@ void initGame(const char* title,int width,int height){
 //Init SDL and the game state
 //Error checking is still missing
 
-    SDL_Init(SDL_INIT_EVERYTHING);
+    //SDL_Init(SDL_INIT_EVERYTHING);
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        // Unrecoverable error, exit here.
+        printf("SDL_Init failed: %s\n", SDL_GetError());
+    }
 
     window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN);
+    if (window == NULL) {
+        // Unrecoverable error, exit here.
+        printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
+    }
 
     renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
+    if (renderer == NULL) {
+        // Unrecoverable error, exit here.
+        printf("SDL_CreateRenderer failed: %s\n", SDL_GetError());
+    }   
 
     IMG_Init(IMG_INIT_PNG);
-
+    printf("IMG_Init: %s\n", IMG_GetError());
     icon = IMG_Load("textures/icon.png");
-
+    printf("IMG_Load: %s\n", IMG_GetError());
     SDL_SetWindowIcon(window,icon);
 
     textures[0] = loadTexture(renderer,"textures/ball.png");
@@ -83,17 +95,19 @@ void initGame(const char* title,int width,int height){
 
     //Init audio
     Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
-
+    printf("Mix_OpenAudio: %s\n", Mix_GetError());
     sound = Mix_LoadWAV("hit.wav");
+    printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
     sound_wall = Mix_LoadWAV("wall_hit.wav");
+    printf("Mix_LoadWAV(\"wall_hit.wav\"): %s\n", Mix_GetError());
     music = Mix_LoadWAV("music.wav");
-
+     printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
 }
 
 void render(){
             //rendering section
         clearScreen(renderer);
-
+        
         //this will be the render function
         SDL_RenderCopy(renderer,textures[1],NULL,&WallRect1);
         SDL_RenderCopy(renderer,textures[1],NULL,&WallRect2);
@@ -103,8 +117,8 @@ void render(){
 
         write(&txt,&score_p1_rect,p1_score,renderer);
         write(&txt,&score_p2_rect,p2_score,renderer);
-        write(&txt,&Player1Name,"Player 1",renderer);
-        write(&txt,&Player2Name,"Player 2",renderer);
+        //write(&txt,&Player1Name,"Player 1",renderer);
+        //write(&txt,&Player2Name,"Player 2",renderer);
         SDL_RenderPresent(renderer);
 
 }
@@ -218,7 +232,15 @@ void gameLoop(){
         snprintf(p2_score,200,"%d",player2->score);
 
         render();
-
+        //Temporary solution for testing
+        if(player1->score >= 25){
+            printf("Player 1 Wins!!");
+            running = 0;
+        }
+        if(player2->score >= 25){
+            printf("Player 2 Wins!!");
+            running = 0;
+        }
         //Limit framerate to 60fps
         dt = SDL_GetTicks()-time;
 
@@ -245,7 +267,6 @@ void quitGame(){
     Mix_FreeChunk(sound_wall);
 
     Mix_CloseAudio();
-    TTF_Quit();
     IMG_Quit();
     SDL_FreeSurface(icon);
     SDL_DestroyRenderer(renderer);
@@ -263,10 +284,10 @@ int main(int argc, char* argv[])
     main_state.quit = &quitGame;
 
     main_state.init("F Pong",800,600);
-
+    printf("Main State Initialized\n");
     //txt is global
-    initTextRenderer(&txt,"fonts/Anonymous.ttf",renderer,60,White);
-
+    initTextRenderer(&txt,renderer,White);
+    printf("Text Renderer Initialized\n");
     Player p1;
     Player p2;
     Ball b;

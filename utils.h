@@ -3,8 +3,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-
-
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filename);
 int checkCollision(SDL_Rect rect1,SDL_Rect rect2);
 void clearScreen(SDL_Renderer* renderer);

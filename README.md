@@ -18,7 +18,13 @@ On Linux you need to install libSDL2-dev, libSDL2_image-dev, libSDL2_mixer-dev p
 On Mac you also need the development packages; you can install them with Homebrew or Mac Ports.
 If you install them from the SDL2 website you need the -L/path/ and -I/path/ directives for gcc, pointing to the correct subfolders in the Framework folder.
 
+The easiest is to edit the task.json file and use Visual Studio Code.
+No editors war, if you like Vim, Emacs, Sublime, whatever, I don't care. My build is editor/ide agnostic.
+
+I am bad at writing make files, I may consider writing one at some point.
+
 ## Additional information and license
+
 If you need help, send me a message: framin2 at gmail.com.
 
 I got the sounds and font for free. I added the font licence file in the fonts folder but I cannot find the audio source anymore. If you recognize it, please, drop me a message so that I can give proper attribution. 

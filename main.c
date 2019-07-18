@@ -60,6 +60,8 @@ Mix_Chunk *music = NULL;
 
 int channel;
 
+Particles* p = NULL;
+
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
 
@@ -104,6 +106,7 @@ void initGame(const char* title,int width,int height){
 }
 
 void render(){
+        
             //rendering section
         clearScreen(renderer);
         
@@ -118,6 +121,13 @@ void render(){
         write(&txt,&score_p2_rect,p2_score,renderer);
         write(&txt,&Player1Name,"PLAYER1",renderer);
         write(&txt,&Player2Name,"PLAYER2",renderer);
+        
+        if(p!=NULL){
+            
+            drawParticles(renderer,p);
+            p->lifetime -= 1;
+        }
+
         SDL_RenderPresent(renderer);
 
 }
@@ -143,7 +153,7 @@ void gameLoop(){
         if(keys[SDL_SCANCODE_ESCAPE]){
                    running = 0;
                }
-
+        
         if(keys[SDL_SCANCODE_UP]){
             movePlayer(player2,UP);
             pd2 = UP;
@@ -180,7 +190,7 @@ void gameLoop(){
                 pd1 = UP;
                 }
         }
-
+        
         //Other events
         while(SDL_PollEvent(&evt)){
             if(evt.type == SDL_QUIT){
@@ -203,14 +213,17 @@ void gameLoop(){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd1;
             channel = Mix_PlayChannel(1, sound, 0);
+            p = genParticles(ball->rect.x,ball->rect.y,100,LEFT);
 
         }
+        
 
 
         if(checkCollision(ball->rect,player2->position)){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd2;
             channel = Mix_PlayChannel(1, sound, 0);
+            p = genParticles(ball->rect.x,ball->rect.y,100,RIGHT);
 
         }
 
@@ -225,6 +238,12 @@ void gameLoop(){
 
 			initBall(ball,0);
 		}
+
+        //check if particles are still alive
+        if(p!=NULL && p->lifetime <= 0){
+            killParticles(p);
+            p = NULL;
+        }
 
         //Convert scores to string
         snprintf(p1_score,200,"%d",player1->score);
@@ -283,10 +302,10 @@ int main(int argc, char* argv[])
     main_state.quit = &quitGame;
 
     main_state.init("F Pong",800,600);
-    //printf("Main State Initialized\n");
+    printf("Main State Initialized\n");
     //txt is global
     initTextRenderer(&txt,renderer);
-    //printf("Text Renderer Initialized\n");
+    printf("Text Renderer Initialized\n");
     Player p1;
     Player p2;
     Ball b;
@@ -298,8 +317,10 @@ int main(int argc, char* argv[])
     initPlayer(player1,1,5,2);
     initPlayer(player2,2,5,3);
     initBall(ball,0);
+    
     Mix_Volume(2, 64);
     Mix_PlayChannel(2, music, -1);
+    printf("Init done");
     main_state.loop();
 
     main_state.quit();

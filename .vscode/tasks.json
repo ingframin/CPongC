@@ -19,8 +19,8 @@
                 "-o./bin/Debug/pong.exe",
                 "-w",
                 "-Wextra",
-                "-Wfatal-errors"
-
+                "-Wfatal-errors",
+                "-O3"
             ]
         },
         {

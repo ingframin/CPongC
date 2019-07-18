@@ -302,10 +302,10 @@ int main(int argc, char* argv[])
     main_state.quit = &quitGame;
 
     main_state.init("F Pong",800,600);
-    printf("Main State Initialized\n");
+    //printf("Main State Initialized\n");
     //txt is global
     initTextRenderer(&txt,renderer);
-    printf("Text Renderer Initialized\n");
+    //printf("Text Renderer Initialized\n");
     Player p1;
     Player p2;
     Ball b;
@@ -320,7 +320,7 @@ int main(int argc, char* argv[])
     
     Mix_Volume(2, 64);
     Mix_PlayChannel(2, music, -1);
-    printf("Init done");
+    //printf("Init done");
     main_state.loop();
 
     main_state.quit();

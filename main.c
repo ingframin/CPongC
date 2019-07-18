@@ -12,7 +12,7 @@
 #include "utils.h"
 #include "text.h"
 #include "game_state.h"
-
+#define FPS_INTERVAL 1
 //Window and renderer, init is in the corresponding function
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -137,8 +137,9 @@ void gameLoop(){
     SDL_Event evt;
     Direction pd1 = UP;
     Direction pd2 = DOWN;
-
-
+    Uint32 fps_frames = 0; //frames passed since the last recorded fps.
+    Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
+    Uint32 fps_current; //the current FPS.
     Uint32 time = SDL_GetTicks();
 
     while(running){
@@ -262,12 +263,19 @@ void gameLoop(){
         }
 
         //Limit framerate to 60fps
+        
+        fps_frames++;
         dt = SDL_GetTicks()-time;
-
-        if(dt < 15){
-            SDL_Delay(15-dt);
+        if(dt < 7){
+            SDL_Delay(7-dt);
         }
-
+        if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
+         {
+            fps_lasttime = SDL_GetTicks();
+            fps_current = fps_frames;
+            fps_frames = 0;
+        }
+        printf("%d\n",fps_current);
         time = SDL_GetTicks();
     }//big while
 }//end gameloop function

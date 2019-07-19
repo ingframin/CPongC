@@ -1,4 +1,4 @@
-*Debug*
-*bin*
-*.exe*
-bin/Debug/Pong.exe
+#*Debug*
+#*bin*
+#*.exe*
+#bin/Debug/Pong.exe

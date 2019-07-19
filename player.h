@@ -1,6 +1,7 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 #include <SDL2/SDL.h>
+#include "utils.h"
 typedef struct {
     SDL_Rect position;
     int speed;
@@ -8,10 +9,7 @@ typedef struct {
     int score;
 } Player;
 
-typedef enum{
-    UP = -1,
-    DOWN = 1
-}Direction;
+
 
 void initPlayer(Player* p, int number, int speed, int tex_index);
 void movePlayer(Player* p, Direction d);

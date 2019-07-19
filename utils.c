@@ -48,7 +48,7 @@ void clearScreen(SDL_Renderer* renderer){
 
 }
 
-Particles* genParticles(int x, int y,int numParticles, ParticleDirection d){
+Particles* genParticles(int x, int y,int numParticles, Direction d){
 	SDL_Point *particles = (SDL_Point*) malloc(numParticles*sizeof(SDL_Point));
 	for(int i=0;i<numParticles;i++){
 		int signx = (d==RIGHT)?-1:1;

@@ -64,7 +64,7 @@ Particles* p = NULL;
 Uint32 fps_frames = 0; //frames passed since the last recorded fps.
 Uint32 fps_lasttime = 0; //the last recorded time.
 Uint32 fps_current; //the current FPS.
-
+int wlight_counter = 20;//lighting effect on wall hit by the walls
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
 
@@ -115,6 +115,7 @@ void render(){
         
         //rendering section
         clearScreen(renderer);
+        
         
         //this will be the render function
         SDL_RenderCopy(renderer,textures[1],NULL,&WallRect1);
@@ -210,10 +211,19 @@ void gameLoop(){
 
         //Check collisions
         if(checkCollision(ball->rect,WallRect1)||checkCollision(ball->rect,WallRect2)){
-
+            SDL_SetTextureColorMod(textures[1],255,255,255);
             ball->y_speed = -(ball->y_speed);
             channel = Mix_PlayChannel(1, sound_wall, 0);
 
+        }
+        else{
+            if(wlight_counter<=0){
+                SDL_SetTextureColorMod(textures[1],125,125,125);
+                wlight_counter = 20;
+            }
+            else{
+                wlight_counter -= 1;
+            }
         }
 
         if(checkCollision(ball->rect,player1->position)){
@@ -221,7 +231,7 @@ void gameLoop(){
             ball->y_speed += pd1;
             channel = Mix_PlayChannel(1, sound, 0);
             //Generate particle effect
-            p = genParticles(ball->rect.x,ball->rect.y,100,LEFT);
+            p = genParticles(ball->rect.x,ball->rect.y,500,LEFT);
 
         }
         
@@ -232,7 +242,7 @@ void gameLoop(){
             ball->y_speed += pd2;
             channel = Mix_PlayChannel(1, sound, 0);
             //Generate particle effect
-            p = genParticles(ball->rect.x,ball->rect.y,100,RIGHT);
+            p = genParticles(ball->rect.x,ball->rect.y,500,RIGHT);
 
         }
 

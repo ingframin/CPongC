@@ -12,7 +12,7 @@
 #include "utils.h"
 #include "text.h"
 #include "game_state.h"
-
+#define FPS_INTERVAL 1
 //Window and renderer, init is in the corresponding function
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -33,7 +33,7 @@ char p2_score[255];
 //time step
 Uint32 dt;
 
-//texture batchn �,�
+//texture batch
 SDL_Texture* textures[4];
 
 //Where are the sprites?
@@ -42,9 +42,6 @@ SDL_Rect WallRect2 = {0,575,800,25};
 SDL_Rect BallRect = {100,100,25,25};
 SDL_Rect Player1Name = {0,28,20,20};
 SDL_Rect Player2Name = {640,28,20,20};
-//Colors used for rendering
-SDL_Color White = {255, 255, 255,255};
-SDL_Color Shade = {255, 128, 10,255};
 
 Player* player1;
 Player* player2;
@@ -69,18 +66,21 @@ void initGame(const char* title,int width,int height){
     /* if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         // Unrecoverable error, exit here.
         printf("SDL_Init failed: %s\n", SDL_GetError());
+        exit(-1);
     } */
 
     window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN);
     /* if (window == NULL) {
         // Unrecoverable error, exit here.
         printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
+        exit(-1);
     } */
 
     renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
     /* if (renderer == NULL) {
         // Unrecoverable error, exit here.
         printf("SDL_CreateRenderer failed: %s\n", SDL_GetError());
+        exit(-1);
     }  */ 
 
     IMG_Init(IMG_INIT_PNG);
@@ -88,7 +88,7 @@ void initGame(const char* title,int width,int height){
     icon = IMG_Load("textures/icon.png");
     //printf("IMG_Load: %s\n", IMG_GetError());
     SDL_SetWindowIcon(window,icon);
-
+    //Only 4 textures used
     textures[0] = loadTexture(renderer,"textures/ball.png");
     textures[1] = loadTexture(renderer,"textures/wall.png");
     textures[2] = loadTexture(renderer,"textures/player1.png");
@@ -107,7 +107,7 @@ void initGame(const char* title,int width,int height){
 
 void render(){
         
-            //rendering section
+        //rendering section
         clearScreen(renderer);
         
         //this will be the render function
@@ -121,9 +121,8 @@ void render(){
         write(&txt,&score_p2_rect,p2_score,renderer);
         write(&txt,&Player1Name,"PLAYER1",renderer);
         write(&txt,&Player2Name,"PLAYER2",renderer);
-        
+        //Careful with this! 
         if(p!=NULL){
-            
             drawParticles(renderer,p);
             p->lifetime -= 1;
         }
@@ -138,8 +137,9 @@ void gameLoop(){
     SDL_Event evt;
     Direction pd1 = UP;
     Direction pd2 = DOWN;
-
-
+    Uint32 fps_frames = 0; //frames passed since the last recorded fps.
+    Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
+    Uint32 fps_current; //the current FPS.
     Uint32 time = SDL_GetTicks();
 
     while(running){
@@ -213,6 +213,7 @@ void gameLoop(){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd1;
             channel = Mix_PlayChannel(1, sound, 0);
+            //Generate particle effect
             p = genParticles(ball->rect.x,ball->rect.y,100,LEFT);
 
         }
@@ -223,6 +224,7 @@ void gameLoop(){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd2;
             channel = Mix_PlayChannel(1, sound, 0);
+            //Generate particle effect
             p = genParticles(ball->rect.x,ball->rect.y,100,RIGHT);
 
         }
@@ -235,7 +237,6 @@ void gameLoop(){
 
 		}else if(ball->rect.x > 800){
 			increaseScore(player1,1);
-
 			initBall(ball,0);
 		}
 
@@ -250,6 +251,7 @@ void gameLoop(){
         snprintf(p2_score,200,"%d",player2->score);
 
         render();
+
         //Temporary solution for testing
         if(player1->score >= 25){
             printf("Player 1 Wins!!");
@@ -259,13 +261,21 @@ void gameLoop(){
             printf("Player 2 Wins!!");
             running = 0;
         }
+
         //Limit framerate to 60fps
+        
+        fps_frames++;
         dt = SDL_GetTicks()-time;
-
-        if(dt < 15){
-            SDL_Delay(15-dt);
+        if(dt < 7){
+            SDL_Delay(7-dt);
         }
-
+        if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
+         {
+            fps_lasttime = SDL_GetTicks();
+            fps_current = fps_frames;
+            fps_frames = 0;
+        }
+        printf("%d\n",fps_current);
         time = SDL_GetTicks();
     }//big while
 }//end gameloop function
@@ -302,10 +312,10 @@ int main(int argc, char* argv[])
     main_state.quit = &quitGame;
 
     main_state.init("F Pong",800,600);
-    printf("Main State Initialized\n");
+
     //txt is global
     initTextRenderer(&txt,renderer);
-    printf("Text Renderer Initialized\n");
+
     Player p1;
     Player p2;
     Ball b;
@@ -320,7 +330,7 @@ int main(int argc, char* argv[])
     
     Mix_Volume(2, 64);
     Mix_PlayChannel(2, music, -1);
-    printf("Init done");
+
     main_state.loop();
 
     main_state.quit();

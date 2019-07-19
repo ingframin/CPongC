@@ -53,8 +53,8 @@ Particles* genParticles(int x, int y,int numParticles, Direction d){
 	for(int i=0;i<numParticles;i++){
 		int signx = (d==RIGHT)?-1:1;
 		int signy = (rand()%2)?-1:1;
-		particles[i].x = x + signx*rand()%10;
-		particles[i].y = y + signy*rand()%10;
+		particles[i].x = x + signx*rand()%20;
+		particles[i].y = y + signy*rand()%5;
 	}
 	Particles* p = (Particles*)malloc(sizeof(Particles));
 	p->points = particles;

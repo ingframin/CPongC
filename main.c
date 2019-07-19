@@ -42,7 +42,10 @@ SDL_Rect WallRect2 = {0,575,800,25};
 SDL_Rect BallRect = {100,100,25,25};
 SDL_Rect Player1Name = {0,28,20,20};
 SDL_Rect Player2Name = {640,28,20,20};
-
+SDL_Rect FPSRect = {400,600-56,20,20};
+SDL_Rect FPSStrRect = {330,600-56,20,20};
+char fps[10];
+char *FPS_str = "FPS";
 Player* player1;
 Player* player2;
 Ball* ball;
@@ -58,6 +61,9 @@ Mix_Chunk *music = NULL;
 int channel;
 
 Particles* p = NULL;
+Uint32 fps_frames = 0; //frames passed since the last recorded fps.
+Uint32 fps_lasttime = 0; //the last recorded time.
+Uint32 fps_current; //the current FPS.
 
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
@@ -121,6 +127,9 @@ void render(){
         write(&txt,&score_p2_rect,p2_score,renderer);
         write(&txt,&Player1Name,"PLAYER1",renderer);
         write(&txt,&Player2Name,"PLAYER2",renderer);
+        write(&txt,&FPSStrRect,FPS_str,renderer);
+        itoa(fps_current,fps,10);
+        write(&txt,&FPSRect,fps,renderer);
         //Careful with this! 
         if(p!=NULL){
             drawParticles(renderer,p);
@@ -137,9 +146,7 @@ void gameLoop(){
     SDL_Event evt;
     Direction pd1 = UP;
     Direction pd2 = DOWN;
-    Uint32 fps_frames = 0; //frames passed since the last recorded fps.
-    Uint32 fps_lasttime = SDL_GetTicks(); //the last recorded time.
-    Uint32 fps_current; //the current FPS.
+    fps_lasttime = SDL_GetTicks();
     Uint32 time = SDL_GetTicks();
 
     while(running){
@@ -266,8 +273,8 @@ void gameLoop(){
         
         fps_frames++;
         dt = SDL_GetTicks()-time;
-        if(dt < 7){
-            SDL_Delay(7-dt);
+        if(dt < 12){
+            SDL_Delay(12-dt);
         }
         if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
          {
@@ -275,7 +282,7 @@ void gameLoop(){
             fps_current = fps_frames;
             fps_frames = 0;
         }
-        printf("%d\n",fps_current);
+        
         time = SDL_GetTicks();
     }//big while
 }//end gameloop function

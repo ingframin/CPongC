@@ -62,7 +62,8 @@ int audio_channels = 1;
 int audio_buffers = 2048;
 Mix_Chunk *sound = NULL;
 Mix_Chunk *sound_wall = NULL;
-Mix_Chunk *music = NULL;
+//https://patrickdearteaga.com/
+Mix_Music *music;
 
 int channel;
 
@@ -71,6 +72,8 @@ Uint32 fps_frames = 0; //frames passed since the last recorded fps.
 Uint32 fps_lasttime = 0; //the last recorded time.
 Uint32 fps_current; //the current FPS.
 int wlight_counter = WLIGTH_COUNTER_DEFAULT;//lighting effect on wall hit by the walls
+
+SDL_GameController* controller;
 
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
@@ -82,7 +85,7 @@ void initGame(const char* title,int width,int height){
         exit(-1);
     } */
 
-    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN|SDL_WINDOW_FULLSCREEN);
+    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN);
     /* if (window == NULL) {
         // Unrecoverable error, exit here.
         printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
@@ -108,6 +111,7 @@ void initGame(const char* title,int width,int height){
     textures[3] = loadTexture(renderer,"textures/player2.png");
     textures[4] = loadTexture(renderer,"textures/logo.png");
 
+    Mix_Init(MIX_INIT_OGG);
     //Init audio
     Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
     //printf("Mix_OpenAudio: %s\n", Mix_GetError());
@@ -115,9 +119,25 @@ void initGame(const char* title,int width,int height){
     //printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
     sound_wall = Mix_LoadWAV("wall_hit.wav");
     //printf("Mix_LoadWAV(\"wall_hit.wav\"): %s\n", Mix_GetError());
-    music = Mix_LoadWAV("music.wav");
+    music = Mix_LoadMUS("interstellar_odyssey_125.ogg");
     //printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
+    //Check for joysticks
+        if( SDL_NumJoysticks() < 1 )
+        {
+            printf( "Warning: No joysticks connected!\n" );
+        }
+    for(int i= 0;i<SDL_NumJoysticks();i++){
+        if(SDL_IsGameController(i)){
+            printf("%d",i);
+            controller= SDL_GameControllerOpen(i);
+            printf("%s",SDL_GameControllerName(controller));
+            break;
+            }       
+    }
+    SDL_GameControllerEventState(SDL_ENABLE);
+
 }
+    
 
 void render(){
         
@@ -159,7 +179,7 @@ void gameLoop(){
     Direction pd2 = DOWN;
     fps_lasttime = SDL_GetTicks();
     Uint32 time = SDL_GetTicks();
-
+    
     while(running){
 
         SDL_PumpEvents();
@@ -208,7 +228,22 @@ void gameLoop(){
                 pd1 = UP;
                 }
         }
-        
+        if(SDL_GameControllerGetButton(controller,SDL_CONTROLLER_BUTTON_DPAD_DOWN)){
+            movePlayer(player1,DOWN);
+            pd1 = DOWN;
+            if(checkCollision(player1->position,WallRect2)){
+                movePlayer(player1,UP);
+                pd1 = UP;
+                }
+        }
+        if(SDL_GameControllerGetButton(controller,SDL_CONTROLLER_BUTTON_DPAD_UP)){
+            movePlayer(player1,UP);
+            pd1 = UP;
+            if(checkCollision(player1->position,WallRect1)){
+                movePlayer(player1,DOWN);
+                pd1 = DOWN;
+                }
+        }
         //Other events
         while(SDL_PollEvent(&evt)){
             if(evt.type == SDL_QUIT){
@@ -322,7 +357,7 @@ void quitGame(){
     //Quit modules
     Mix_FreeChunk(sound);
     Mix_FreeChunk(sound_wall);
-
+    SDL_GameControllerClose(controller);
     Mix_CloseAudio();
     IMG_Quit();
     SDL_FreeSurface(icon);
@@ -353,13 +388,13 @@ int main(int argc, char* argv[])
     player2=&p2;
     ball=&b;
 
-    initPlayer(player1,1,5,2);
-    initPlayer(player2,2,5,3);
+    initPlayer(player1,1,8,2);
+    initPlayer(player2,2,8,3);
     initBall(ball,0,30);
     
-    Mix_Volume(2, 64);
-    Mix_PlayChannel(2, music, -1);
-
+    Mix_VolumeMusic(64);
+    
+    Mix_PlayMusic(music, -1);
     main_state.loop();
 
     main_state.quit();

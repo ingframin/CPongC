@@ -14,4 +14,15 @@ typedef struct{
     void (*quit)(void);
 }State;
 
+void initGame(const char* title, int width, int height);
+void initStartScreen(const char* title, int width, int height);
+void initExitScreen(const char* title, int width, int height);
+
+void gameLoop();
+void startScreenLoop();
+void exitScreenLoop();
+
+void gameQuit();
+void startScreenQuit();
+void exitScreenQuit();
 #endif // GAME_STATE_H_INCLUDED

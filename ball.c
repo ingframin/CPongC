@@ -10,11 +10,11 @@ void initBall(Ball* b,int tex_ind, int rad){
     b->tex_index = tex_ind;
 
     if(dir%2){
-        b->x_speed = 5;
+        b->x_speed = 8;
         b->y_speed = 0;
     }
     else{
-        b->x_speed = -5;
+        b->x_speed = -8;
         b->y_speed = 0;
     }
 

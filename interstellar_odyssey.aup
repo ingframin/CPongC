@@ -1,0 +1,109 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="interstellar_odyssey_data" version="1.3.0" audacityversion="2.3.2" sel0="0.0000000000" sel1="83.2000000000" vpos="0" h="0.0000000000" zoom="16.8269230769" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="GENRE" value="Video Games"/>
+		<tag name="COMMENTS" value="CC-BY"/>
+		<tag name="TITLE" value="VK_Creation7559"/>
+		<tag name="YEAR" value="2017"/>
+		<tag name="ARTIST" value="Patrick de Arteaga"/>
+	</tags>
+	<wavetrack name="interstellar_odyssey" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="3669120">
+				<waveblock start="0">
+					<simpleblockfile filename="e0808230.au" len="262144" min="-0.204785" max="0.185531" rms="0.047925"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e080897e.au" len="262144" min="-0.219732" max="0.210428" rms="0.074206"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="e0808ea1.au" len="262144" min="-0.943421" max="0.98425" rms="0.261604"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="e0808dba.au" len="262144" min="-0.964272" max="0.969188" rms="0.296861"/>
+				</waveblock>
+				<waveblock start="1048576">
+					<simpleblockfile filename="e0808df2.au" len="262144" min="-0.99631" max="1.009253" rms="0.258439"/>
+				</waveblock>
+				<waveblock start="1310720">
+					<simpleblockfile filename="e0808192.au" len="262144" min="-1.126186" max="1.027538" rms="0.262209"/>
+				</waveblock>
+				<waveblock start="1572864">
+					<simpleblockfile filename="e0808b5e.au" len="262144" min="-1.031603" max="1.024169" rms="0.252383"/>
+				</waveblock>
+				<waveblock start="1835008">
+					<simpleblockfile filename="e080837e.au" len="262144" min="-1.026937" max="1.052797" rms="0.260788"/>
+				</waveblock>
+				<waveblock start="2097152">
+					<simpleblockfile filename="e08087fc.au" len="262144" min="-1.046305" max="1.110866" rms="0.26697"/>
+				</waveblock>
+				<waveblock start="2359296">
+					<simpleblockfile filename="e0808397.au" len="262144" min="-1.018552" max="1.116587" rms="0.26503"/>
+				</waveblock>
+				<waveblock start="2621440">
+					<simpleblockfile filename="e0808e67.au" len="262144" min="-0.995003" max="0.968831" rms="0.275825"/>
+				</waveblock>
+				<waveblock start="2883584">
+					<simpleblockfile filename="e080827d.au" len="262144" min="-0.995171" max="0.963974" rms="0.268691"/>
+				</waveblock>
+				<waveblock start="3145728">
+					<simpleblockfile filename="e0808877.au" len="262144" min="-0.977705" max="1.046654" rms="0.271347"/>
+				</waveblock>
+				<waveblock start="3407872">
+					<simpleblockfile filename="e0808867.au" len="261248" min="-0.984642" max="1.001441" rms="0.25049"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="interstellar_odyssey" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="3669120">
+				<waveblock start="0">
+					<simpleblockfile filename="e080813a.au" len="262144" min="-0.422083" max="0.406359" rms="0.145045"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e0808a20.au" len="262144" min="-0.339046" max="0.355257" rms="0.109357"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="e0808581.au" len="262144" min="-0.950609" max="0.96569" rms="0.262795"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="e080889a.au" len="262144" min="-0.964397" max="0.976937" rms="0.29579"/>
+				</waveblock>
+				<waveblock start="1048576">
+					<simpleblockfile filename="e08084c1.au" len="262144" min="-0.980004" max="0.969676" rms="0.264507"/>
+				</waveblock>
+				<waveblock start="1310720">
+					<simpleblockfile filename="e0808086.au" len="262144" min="-0.967204" max="0.990091" rms="0.267356"/>
+				</waveblock>
+				<waveblock start="1572864">
+					<simpleblockfile filename="e080867c.au" len="262144" min="-0.962232" max="0.973297" rms="0.263395"/>
+				</waveblock>
+				<waveblock start="1835008">
+					<simpleblockfile filename="e0808bca.au" len="262144" min="-1.004765" max="0.957499" rms="0.277468"/>
+				</waveblock>
+				<waveblock start="2097152">
+					<simpleblockfile filename="e0808555.au" len="262144" min="-0.975716" max="1.090752" rms="0.281253"/>
+				</waveblock>
+				<waveblock start="2359296">
+					<simpleblockfile filename="e0808742.au" len="262144" min="-0.971402" max="1.02427" rms="0.28051"/>
+				</waveblock>
+				<waveblock start="2621440">
+					<simpleblockfile filename="e0808d0d.au" len="262144" min="-1.031663" max="1.009813" rms="0.28544"/>
+				</waveblock>
+				<waveblock start="2883584">
+					<simpleblockfile filename="e0808b57.au" len="262144" min="-0.977314" max="0.976677" rms="0.267796"/>
+				</waveblock>
+				<waveblock start="3145728">
+					<simpleblockfile filename="e080825e.au" len="262144" min="-0.972739" max="1.045753" rms="0.277597"/>
+				</waveblock>
+				<waveblock start="3407872">
+					<simpleblockfile filename="e0808ce7.au" len="261248" min="-0.975654" max="0.987844" rms="0.258156"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

@@ -13,6 +13,11 @@
 #include "text.h"
 #include "game_state.h"
 #define FPS_INTERVAL 1
+#define WLIGTH_COUNTER_DEFAULT 30
+#define FPS_120 8
+#define FPS_100 9
+#define FPS_60 15
+
 //Window and renderer, init is in the corresponding function
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -34,18 +39,19 @@ char p2_score[255];
 Uint32 dt;
 
 //texture batch
-SDL_Texture* textures[4];
+SDL_Texture* textures[5];
 
 //Where are the sprites?
 SDL_Rect WallRect1 = {0,0,800,25};
 SDL_Rect WallRect2 = {0,575,800,25};
-SDL_Rect BallRect = {100,100,25,25};
 SDL_Rect Player1Name = {0,28,20,20};
 SDL_Rect Player2Name = {640,28,20,20};
-SDL_Rect FPSRect = {400,600-56,20,20};
-SDL_Rect FPSStrRect = {330,600-56,20,20};
+SDL_Rect FPSRect = {400,600-56,15,15};
+SDL_Rect FPSStrRect = {330,600-56,15,15};
+SDL_Rect Logo = {130,235,540,130};
+
 char fps[10];
-char *FPS_str = "FPS";
+char *FPS_str = "FPS:";
 Player* player1;
 Player* player2;
 Ball* ball;
@@ -64,7 +70,8 @@ Particles* p = NULL;
 Uint32 fps_frames = 0; //frames passed since the last recorded fps.
 Uint32 fps_lasttime = 0; //the last recorded time.
 Uint32 fps_current; //the current FPS.
-int wlight_counter = 20;//lighting effect on wall hit by the walls
+int wlight_counter = WLIGTH_COUNTER_DEFAULT;//lighting effect on wall hit by the walls
+
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
 
@@ -75,7 +82,7 @@ void initGame(const char* title,int width,int height){
         exit(-1);
     } */
 
-    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,width,height, SDL_WINDOW_SHOWN|SDL_WINDOW_FULLSCREEN);
     /* if (window == NULL) {
         // Unrecoverable error, exit here.
         printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
@@ -94,11 +101,12 @@ void initGame(const char* title,int width,int height){
     icon = IMG_Load("textures/icon.png");
     //printf("IMG_Load: %s\n", IMG_GetError());
     SDL_SetWindowIcon(window,icon);
-    //Only 4 textures used
+    //Only 5 textures used
     textures[0] = loadTexture(renderer,"textures/ball.png");
     textures[1] = loadTexture(renderer,"textures/wall.png");
     textures[2] = loadTexture(renderer,"textures/player1.png");
     textures[3] = loadTexture(renderer,"textures/player2.png");
+    textures[4] = loadTexture(renderer,"textures/logo.png");
 
     //Init audio
     Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
@@ -118,16 +126,18 @@ void render(){
         
         
         //this will be the render function
+        SDL_RenderCopy(renderer,textures[4], NULL, &Logo);
         SDL_RenderCopy(renderer,textures[1],NULL,&WallRect1);
         SDL_RenderCopy(renderer,textures[1],NULL,&WallRect2);
-        SDL_RenderCopy(renderer,textures[ball->tex_index],NULL,&ball->rect);
+        
         SDL_RenderCopy(renderer,textures[player1->tex_index],NULL,&(player1->position));
         SDL_RenderCopy(renderer,textures[player2->tex_index],NULL,&(player2->position));
+        SDL_RenderCopy(renderer,textures[ball->tex_index],NULL,&ball->rect);
 
         write(&txt,&score_p1_rect,p1_score,renderer);
         write(&txt,&score_p2_rect,p2_score,renderer);
-        write(&txt,&Player1Name,"PLAYER1",renderer);
-        write(&txt,&Player2Name,"PLAYER2",renderer);
+        write(&txt,&Player1Name,"Player 1",renderer);
+        write(&txt,&Player2Name,"Player 2",renderer);
         write(&txt,&FPSStrRect,FPS_str,renderer);
         itoa(fps_current,fps,10);
         write(&txt,&FPSRect,fps,renderer);
@@ -212,6 +222,7 @@ void gameLoop(){
         //Check collisions
         if(checkCollision(ball->rect,WallRect1)||checkCollision(ball->rect,WallRect2)){
             SDL_SetTextureColorMod(textures[1],255,255,255);
+            SDL_SetTextureColorMod(textures[4],255,255,255);
             ball->y_speed = -(ball->y_speed);
             channel = Mix_PlayChannel(1, sound_wall, 0);
 
@@ -219,7 +230,8 @@ void gameLoop(){
         else{
             if(wlight_counter<=0){
                 SDL_SetTextureColorMod(textures[1],125,125,125);
-                wlight_counter = 20;
+                SDL_SetTextureColorMod(textures[4],125,125,125);
+                wlight_counter = WLIGTH_COUNTER_DEFAULT;
             }
             else{
                 wlight_counter -= 1;
@@ -249,12 +261,12 @@ void gameLoop(){
         //Score update
 		if(ball->rect.x <0){
 			increaseScore(player2,1);
-			initBall(ball,0);
+			initBall(ball,0,30);
 
 
 		}else if(ball->rect.x > 800){
 			increaseScore(player1,1);
-			initBall(ball,0);
+			initBall(ball,0,30);
 		}
 
         //check if particles are still alive
@@ -283,8 +295,8 @@ void gameLoop(){
         
         fps_frames++;
         dt = SDL_GetTicks()-time;
-        if(dt < 12){
-            SDL_Delay(12-dt);
+        if(dt < FPS_100){
+            SDL_Delay(FPS_100-dt);
         }
         if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
          {
@@ -343,7 +355,7 @@ int main(int argc, char* argv[])
 
     initPlayer(player1,1,5,2);
     initPlayer(player2,2,5,3);
-    initBall(ball,0);
+    initBall(ball,0,30);
     
     Mix_Volume(2, 64);
     Mix_PlayChannel(2, music, -1);

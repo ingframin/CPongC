@@ -1,11 +1,11 @@
 #include "ball.h"
 
-void initBall(Ball* b,int tex_ind){
+void initBall(Ball* b,int tex_ind, int rad){
     //fixed for 800x600 window, it can be changed to handle different resolutions
     b->rect.x = 400;
     b->rect.y = 300;
-    b->rect.w = 25;
-    b->rect.h = 25;
+    b->rect.w = rad;
+    b->rect.h = rad;
     int dir = rand();
     b->tex_index = tex_ind;
 

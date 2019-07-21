@@ -6,12 +6,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
+#include <stdbool.h>
 
 #include "player.h"
 #include "ball.h"
 #include "utils.h"
 #include "text.h"
 #include "game_state.h"
+#include "audio.h"
+
 #define FPS_INTERVAL 1
 #define WLIGTH_COUNTER_DEFAULT 30
 #define FPS_120 8
@@ -56,17 +59,15 @@ Player* player1;
 Player* player2;
 Ball* ball;
 
-int audio_rate = 44100;
-Uint16 audio_format = AUDIO_S16SYS;
-int audio_channels = 1;
-int audio_buffers = 2048;
-Mix_Chunk *sound = NULL;
-Mix_Chunk *sound_wall = NULL;
 //https://patrickdearteaga.com/
-Mix_Music *music;
+//Mix_Music *music;
 
 int channel;
 
+Audio audio;
+int hit_sound;
+int wall_hit_sound;
+int music;
 Particles* p = NULL;
 Uint32 fps_frames = 0; //frames passed since the last recorded fps.
 Uint32 fps_lasttime = 0; //the last recorded time.
@@ -111,26 +112,24 @@ void initGame(const char* title,int width,int height){
     textures[3] = loadTexture(renderer,"textures/player2.png");
     textures[4] = loadTexture(renderer,"textures/logo.png");
 
-    Mix_Init(MIX_INIT_OGG);
-    //Init audio
-    Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers);
-    //printf("Mix_OpenAudio: %s\n", Mix_GetError());
-    sound = Mix_LoadWAV("hit.wav");
+    audio = initAudio(44100,AUDIO_S16SYS,2,2048,2,1);
+
+    hit_sound = loadSound(&audio,"hit.wav");
     //printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
-    sound_wall = Mix_LoadWAV("wall_hit.wav");
+    wall_hit_sound = loadSound(&audio,"wall_hit.wav");
     //printf("Mix_LoadWAV(\"wall_hit.wav\"): %s\n", Mix_GetError());
-    music = Mix_LoadMUS("interstellar_odyssey_125.ogg");
+    music = loadMusic(&audio,"interstellar_odyssey_125.ogg");
     //printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
+
     //Check for joysticks
-        if( SDL_NumJoysticks() < 1 )
-        {
-            printf( "Warning: No joysticks connected!\n" );
-        }
+    /*This is a stub to test controller support.
+    It needs to be fixed to support 2 controllers. */
+    if( SDL_NumJoysticks() < 1 ){
+        printf( "Warning: No joysticks connected!\n" );
+    }
     for(int i= 0;i<SDL_NumJoysticks();i++){
         if(SDL_IsGameController(i)){
-            printf("%d",i);
             controller= SDL_GameControllerOpen(i);
-            printf("%s",SDL_GameControllerName(controller));
             break;
             }       
     }
@@ -259,7 +258,8 @@ void gameLoop(){
             SDL_SetTextureColorMod(textures[1],255,255,255);
             SDL_SetTextureColorMod(textures[4],255,255,255);
             ball->y_speed = -(ball->y_speed);
-            channel = Mix_PlayChannel(1, sound_wall, 0);
+            playSound(&audio,wall_hit_sound);
+            
 
         }
         else{
@@ -276,7 +276,8 @@ void gameLoop(){
         if(checkCollision(ball->rect,player1->position)){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd1;
-            channel = Mix_PlayChannel(1, sound, 0);
+            
+            playSound(&audio,hit_sound);
             //Generate particle effect
             p = genParticles(ball->rect.x,ball->rect.y,500,LEFT);
 
@@ -287,7 +288,8 @@ void gameLoop(){
         if(checkCollision(ball->rect,player2->position)){
             ball->x_speed = -(ball->x_speed);
             ball->y_speed += pd2;
-            channel = Mix_PlayChannel(1, sound, 0);
+            playSound(&audio,hit_sound);
+           
             //Generate particle effect
             p = genParticles(ball->rect.x,ball->rect.y,500,RIGHT);
 
@@ -355,10 +357,8 @@ void quitGame(){
     SDL_DestroyTexture(txt.chrSheet);
 
     //Quit modules
-    Mix_FreeChunk(sound);
-    Mix_FreeChunk(sound_wall);
     SDL_GameControllerClose(controller);
-    Mix_CloseAudio();
+    quitAudio(&audio);
     IMG_Quit();
     SDL_FreeSurface(icon);
     SDL_DestroyRenderer(renderer);
@@ -392,9 +392,9 @@ int main(int argc, char* argv[])
     initPlayer(player2,2,8,3);
     initBall(ball,0,30);
     
-    Mix_VolumeMusic(64);
+    changeMusicVolume(64);
     
-    Mix_PlayMusic(music, -1);
+    playMusic(&audio,music,true);
     main_state.loop();
 
     main_state.quit();

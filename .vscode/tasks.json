@@ -9,7 +9,7 @@
             "command": "gcc",
             "args": [
                 "main.c","ball.h","ball.c","player.h","player.c","text.h","text.c","utils.h","utils.c",
-                "game_state.h","game_state.c",
+                "game_state.h","game_state.c","audio.h","audio.c",
                 "-L./SDL2/lib",
                 "-I./SDL2/include/",
                 "-lmingw32",//Remove this line on Mac and Linux

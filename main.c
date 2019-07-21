@@ -5,13 +5,13 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
+//#include <SDL2/SDL_mixer.h>
 #include <stdbool.h>
 
 #include "player.h"
 #include "ball.h"
 #include "utils.h"
-#include "text.h"
+//#include "text.h"
 #include "game_state.h"
 #include "audio.h"
 
@@ -32,7 +32,7 @@ SDL_Surface* icon;
 int running = 1;
 
 //Strutures and strings to render score on screen
-TextRenderer txt;
+//TextRenderer txt;
 SDL_Rect score_p1_rect = {0,0,26,26};
 SDL_Rect score_p2_rect = {800-52,0,26,26};
 char p1_score[255];
@@ -60,7 +60,6 @@ Player* player2;
 Ball* ball;
 
 //https://patrickdearteaga.com/
-//Mix_Music *music;
 
 int channel;
 
@@ -74,7 +73,7 @@ Uint32 fps_lasttime = 0; //the last recorded time.
 Uint32 fps_current; //the current FPS.
 int wlight_counter = WLIGTH_COUNTER_DEFAULT;//lighting effect on wall hit by the walls
 
-SDL_GameController* controller;
+//SDL_GameController* controller;
 
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
@@ -124,7 +123,7 @@ void initGame(const char* title,int width,int height){
     //Check for joysticks
     /*This is a stub to test controller support.
     It needs to be fixed to support 2 controllers. */
-    if( SDL_NumJoysticks() < 1 ){
+    /*if( SDL_NumJoysticks() < 1 ){
         printf( "Warning: No joysticks connected!\n" );
     }
     for(int i= 0;i<SDL_NumJoysticks();i++){
@@ -133,7 +132,7 @@ void initGame(const char* title,int width,int height){
             break;
             }       
     }
-    SDL_GameControllerEventState(SDL_ENABLE);
+    SDL_GameControllerEventState(SDL_ENABLE);*/
 
 }
     
@@ -153,13 +152,13 @@ void render(){
         SDL_RenderCopy(renderer,textures[player2->tex_index],NULL,&(player2->position));
         SDL_RenderCopy(renderer,textures[ball->tex_index],NULL,&ball->rect);
 
-        write(&txt,&score_p1_rect,p1_score,renderer);
+        /*write(&txt,&score_p1_rect,p1_score,renderer);
         write(&txt,&score_p2_rect,p2_score,renderer);
         write(&txt,&Player1Name,"Player 1",renderer);
         write(&txt,&Player2Name,"Player 2",renderer);
         write(&txt,&FPSStrRect,FPS_str,renderer);
-        itoa(fps_current,fps,10);
-        write(&txt,&FPSRect,fps,renderer);
+        sprintf(fps,fps_current);
+        write(&txt,&FPSRect,fps,renderer);*/
         //Careful with this! 
         if(p!=NULL){
             drawParticles(renderer,p);
@@ -227,7 +226,7 @@ void gameLoop(){
                 pd1 = UP;
                 }
         }
-        if(SDL_GameControllerGetButton(controller,SDL_CONTROLLER_BUTTON_DPAD_DOWN)){
+        /* if(SDL_GameControllerGetButton(controller,SDL_CONTROLLER_BUTTON_DPAD_DOWN)){
             movePlayer(player1,DOWN);
             pd1 = DOWN;
             if(checkCollision(player1->position,WallRect2)){
@@ -242,7 +241,7 @@ void gameLoop(){
                 movePlayer(player1,DOWN);
                 pd1 = DOWN;
                 }
-        }
+        }*/
         //Other events
         while(SDL_PollEvent(&evt)){
             if(evt.type == SDL_QUIT){
@@ -354,10 +353,10 @@ void quitGame(){
         SDL_DestroyTexture(textures[i]);
     }
 
-    SDL_DestroyTexture(txt.chrSheet);
+    //SDL_DestroyTexture(txt.chrSheet);
 
     //Quit modules
-    SDL_GameControllerClose(controller);
+    //SDL_GameControllerClose(controller);
     quitAudio(&audio);
     IMG_Quit();
     SDL_FreeSurface(icon);
@@ -378,7 +377,7 @@ int main(int argc, char* argv[])
     main_state.init("F Pong",800,600);
 
     //txt is global
-    initTextRenderer(&txt,renderer);
+    //initTextRenderer(&txt,renderer);
 
     Player p1;
     Player p2;

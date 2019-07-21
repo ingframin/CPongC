@@ -8,11 +8,22 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                "main.c","ball.h","ball.c","player.h","player.c","text.h","text.c","utils.h","utils.c",
-                "game_state.h","game_state.c","audio.h","audio.c",
+                "main.c",
+                "ball.h",
+                "ball.c",
+                "player.h",
+                "player.c",
+                "text.h",
+                "text.c",
+                "utils.h",
+                "utils.c",
+                "game_state.h",
+                "game_state.c",
+                "audio.h",
+                "audio.c",
                 "-L./SDL2/lib",
                 "-I./SDL2/include/",
-                "-lmingw32",//Remove this line on Mac and Linux
+                "-lmingw32",
                 "-lSDL2main",
                 "-lSDL2",
                 "-lSDL2_image",
@@ -22,6 +33,9 @@
                 "-Wextra",
                 "-Wfatal-errors",
                 "-O3"
+            ],
+            "problemMatcher": [
+                "$gcc"
             ]
         },
         {
@@ -29,8 +43,19 @@
             "type": "shell",
             "command": "gcc",
             "args": [
-                
-                "main.c","ball.c","player.c","text.c","utils.c",
+                "main.c",
+                "ball.h",
+                "ball.c",
+                "player.h",
+                "player.c",
+                //"text.h",
+                //"text.c",
+                "utils.h",
+                "utils.c",
+                "game_state.h",
+                "game_state.c",
+                "audio.h",
+                "audio.c",
                 "-o./bin/Debug/pong",
                 "-lSDL2main",
                 "-lSDL2",
@@ -38,8 +63,8 @@
                 "-lSDL2_mixer",
                 "-w",
                 "-Wextra",
-                "-Wfatal-errors"
-
+                "-Wfatal-errors",
+                "-Wall"
             ]
         }
     ]

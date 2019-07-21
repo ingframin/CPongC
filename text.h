@@ -11,7 +11,7 @@ typedef struct {
 
 } TextRenderer;
 
-int pick(TextRenderer* tR,char c);
+
 void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd);
 
 void write(TextRenderer* tR, SDL_Rect* pos,char* txt, SDL_Renderer* rnd);

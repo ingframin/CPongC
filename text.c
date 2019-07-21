@@ -1,7 +1,10 @@
 #include "text.h"
 #include <string.h>
-//Space character and punctuation still missing
-const char* ab = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .,?:abcdefghijklmnopqrstuvwxyz0123456789";
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+
+const char ab[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ .,?:abcdefghijklmnopqrstuvwxyz0123456789\0";
 
 void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd){
 
@@ -26,7 +29,7 @@ void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd){
 //still inefficient, must be updated.
 
 int pick(TextRenderer* tR,char c){
-    for(int i=0;i<72;i++){
+    for(int i=0;i<68;i++){
         if(ab[i]==c){
             return i*tR->chrW;
         }
@@ -35,9 +38,10 @@ int pick(TextRenderer* tR,char c){
 }
 
 //Render a string on screen
-void write(TextRenderer* tR, SDL_Rect* pos,char* txt, SDL_Renderer* rnd){
+void writeTxt(TextRenderer* tR, SDL_Rect* pos, const char* txt, SDL_Renderer* rnd){
     int l = strlen(txt);
     SDL_Rect rndRect = {pos->x,pos->y,pos->w,pos->h};
+
     for(int i =0;i<l;i++){
         tR->chrRect.x = pick(tR,txt[i]);
         SDL_RenderCopy(rnd,tR->chrSheet,&tR->chrRect,&rndRect);

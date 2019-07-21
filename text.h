@@ -14,5 +14,5 @@ typedef struct {
 
 void initTextRenderer(TextRenderer* tR, SDL_Renderer* rnd);
 
-void write(TextRenderer* tR, SDL_Rect* pos,char* txt, SDL_Renderer* rnd);
+void writeTxt(TextRenderer* tR, SDL_Rect* pos, const char* txt, SDL_Renderer* rnd);
 #endif // TEXT_H_INCLUDED

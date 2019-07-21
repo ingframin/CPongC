@@ -11,7 +11,7 @@
 #include "player.h"
 #include "ball.h"
 #include "utils.h"
-//#include "text.h"
+#include "text.h"
 #include "game_state.h"
 #include "audio.h"
 
@@ -32,7 +32,7 @@ SDL_Surface* icon;
 int running = 1;
 
 //Strutures and strings to render score on screen
-//TextRenderer txt;
+TextRenderer txt;
 SDL_Rect score_p1_rect = {0,0,26,26};
 SDL_Rect score_p2_rect = {800-52,0,26,26};
 char p1_score[255];
@@ -152,13 +152,13 @@ void render(){
         SDL_RenderCopy(renderer,textures[player2->tex_index],NULL,&(player2->position));
         SDL_RenderCopy(renderer,textures[ball->tex_index],NULL,&ball->rect);
 
-        /*write(&txt,&score_p1_rect,p1_score,renderer);
-        write(&txt,&score_p2_rect,p2_score,renderer);
-        write(&txt,&Player1Name,"Player 1",renderer);
-        write(&txt,&Player2Name,"Player 2",renderer);
-        write(&txt,&FPSStrRect,FPS_str,renderer);
-        sprintf(fps,fps_current);
-        write(&txt,&FPSRect,fps,renderer);*/
+        writeTxt(&txt,&score_p1_rect,p1_score,renderer);
+        writeTxt(&txt,&score_p2_rect,p2_score,renderer);
+        writeTxt(&txt,&Player1Name,"Player 1",renderer);
+        writeTxt(&txt,&Player2Name,"Player 2",renderer);
+        writeTxt(&txt,&FPSStrRect,FPS_str,renderer);
+        snprintf(fps,10,"%d",fps_current);
+        writeTxt(&txt,&FPSRect,fps,renderer);
         //Careful with this! 
         if(p!=NULL){
             drawParticles(renderer,p);
@@ -353,7 +353,7 @@ void quitGame(){
         SDL_DestroyTexture(textures[i]);
     }
 
-    //SDL_DestroyTexture(txt.chrSheet);
+    SDL_DestroyTexture(txt.chrSheet);
 
     //Quit modules
     //SDL_GameControllerClose(controller);
@@ -377,7 +377,7 @@ int main(int argc, char* argv[])
     main_state.init("F Pong",800,600);
 
     //txt is global
-    //initTextRenderer(&txt,renderer);
+    initTextRenderer(&txt,renderer);
 
     Player p1;
     Player p2;

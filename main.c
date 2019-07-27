@@ -12,7 +12,6 @@
 #include "ball.h"
 #include "utils.h"
 #include "text.h"
-#include "game_state.h"
 #include "audio.h"
 
 #define FPS_INTERVAL 1
@@ -104,6 +103,8 @@ void initGame(const char* title,int width,int height){
     icon = IMG_Load("textures/icon.png");
     //printf("IMG_Load: %s\n", IMG_GetError());
     SDL_SetWindowIcon(window,icon);
+    audio = initAudio(44100,AUDIO_S16SYS,2,2048,2,1);
+
     //Only 5 textures used
     textures[0] = loadTexture(renderer,"textures/ball.png");
     textures[1] = loadTexture(renderer,"textures/wall.png");
@@ -111,7 +112,7 @@ void initGame(const char* title,int width,int height){
     textures[3] = loadTexture(renderer,"textures/player2.png");
     textures[4] = loadTexture(renderer,"textures/logo.png");
 
-    audio = initAudio(44100,AUDIO_S16SYS,2,2048,2,1);
+    
 
     hit_sound = loadSound(&audio,"hit.wav");
     //printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
@@ -357,7 +358,7 @@ void quitGame(){
 
     //Quit modules
     //SDL_GameControllerClose(controller);
-    quitAudio(&audio);
+    //quitAudio(&audio);
     IMG_Quit();
     SDL_FreeSurface(icon);
     SDL_DestroyRenderer(renderer);
@@ -365,16 +366,9 @@ void quitGame(){
     SDL_Quit();
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
 
-    State main_state;
-    main_state.current = GAME;
-    main_state.init = &initGame;
-    main_state.loop = &gameLoop;
-    main_state.quit = &quitGame;
-
-    main_state.init("F Pong",800,600);
+    initGame("F Pong",800,600);
 
     //txt is global
     initTextRenderer(&txt,renderer);
@@ -394,9 +388,9 @@ int main(int argc, char* argv[])
     changeMusicVolume(64);
     
     playMusic(&audio,music,true);
-    main_state.loop();
+    gameLoop();
 
-    main_state.quit();
+    quitGame();
 
     return 0;
 }

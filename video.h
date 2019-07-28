@@ -7,8 +7,10 @@
 typedef struct{
     SDL_Window* wnd;
     SDL_Renderer* rnd;
-    
+    int width,height;
 }Video;
 
+Video* initVideo(const char* title,int width, int height);
+void destroyVideo(Video* vd);
 
 #endif

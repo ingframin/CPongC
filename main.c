@@ -6,12 +6,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdbool.h>
-
 #include "player.h"
 #include "ball.h"
 #include "utils.h"
 #include "text.h"
 #include "audio.h"
+#include "sprite.h"
 
 #define FPS_INTERVAL 1
 #define WLIGTH_COUNTER_DEFAULT 30
@@ -43,8 +43,8 @@ Uint32 dt;
 SDL_Texture* textures[5];
 
 //Where are the sprites?
-SDL_Rect WallRect1 = {0,0,800,25};
-SDL_Rect WallRect2 = {0,575,800,25};
+Sprite* wall1;
+Sprite* wall2;
 SDL_Rect Player1Name = {0,28,20,20};
 SDL_Rect Player2Name = {640,28,20,20};
 SDL_Rect FPSRect = {400,600-56,15,15};
@@ -106,12 +106,15 @@ void initGame(const char* title,int width,int height){
 
     //Only 5 textures used
     textures[0] = loadTexture(renderer,"textures/ball.png");
-    textures[1] = loadTexture(renderer,"textures/wall.png");
     textures[2] = loadTexture(renderer,"textures/player1.png");
     textures[3] = loadTexture(renderer,"textures/player2.png");
     textures[4] = loadTexture(renderer,"textures/logo.png");
 
+    wall1 = newSprite(renderer,"textures/wall.png");
+    wall2 = newSprite(renderer,"textures/wall.png");
     
+    moveSprite(wall1,0,0);
+    moveSprite(wall2,0,575);
 
     hit_sound = loadSound(&audio,"hit.wav");
     //printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
@@ -120,19 +123,6 @@ void initGame(const char* title,int width,int height){
     music = loadMusic(&audio,"interstellar_odyssey_125.ogg");
     //printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
 
-    //Check for joysticks
-    /*This is a stub to test controller support.
-    It needs to be fixed to support 2 controllers. */
-    /*if( SDL_NumJoysticks() < 1 ){
-        printf( "Warning: No joysticks connected!\n" );
-    }
-    for(int i= 0;i<SDL_NumJoysticks();i++){
-        if(SDL_IsGameController(i)){
-            controller= SDL_GameControllerOpen(i);
-            break;
-            }       
-    }
-    SDL_GameControllerEventState(SDL_ENABLE);*/
 
 }
     
@@ -145,8 +135,8 @@ void render(){
         
         //this will be the render function
         SDL_RenderCopy(renderer,textures[4], NULL, &Logo);
-        SDL_RenderCopy(renderer,textures[1],NULL,&WallRect1);
-        SDL_RenderCopy(renderer,textures[1],NULL,&WallRect2);
+        SDL_RenderCopy(renderer,wall1->txt,NULL,&wall1->position);
+        SDL_RenderCopy(renderer,wall2->txt,NULL,&wall2->position);
         
         SDL_RenderCopy(renderer,textures[player1->tex_index],NULL,&(player1->position));
         SDL_RenderCopy(renderer,textures[player2->tex_index],NULL,&(player2->position));
@@ -193,7 +183,7 @@ void gameLoop(){
         if(keys[SDL_SCANCODE_UP]){
             movePlayer(player2,UP);
             pd2 = UP;
-            if(checkCollision(player2->position,WallRect1)){
+            if(checkCollision(player2->position,wall1->position)){
                 movePlayer(player2,DOWN);
                 pd2 = DOWN;
             }
@@ -202,7 +192,7 @@ void gameLoop(){
         if(keys[SDL_SCANCODE_DOWN]){
             movePlayer(player2,DOWN);
             pd2 = DOWN;
-            if(checkCollision(player2->position,WallRect2)){
+            if(checkCollision(player2->position,wall2->position)){
                 movePlayer(player2,UP);
                 pd2 = UP;
             }
@@ -212,7 +202,7 @@ void gameLoop(){
         if(keys[SDL_SCANCODE_E]){
             movePlayer(player1,UP);
             pd1 = UP;
-            if(checkCollision(player1->position,WallRect1)){
+            if(checkCollision(player1->position,wall1->position)){
                 movePlayer(player1,DOWN);
                 pd1 = DOWN;
             }
@@ -221,27 +211,12 @@ void gameLoop(){
         if(keys[SDL_SCANCODE_D]){
             movePlayer(player1,DOWN);
             pd1 = DOWN;
-            if(checkCollision(player1->position,WallRect2)){
+            if(checkCollision(player1->position,wall2->position)){
                 movePlayer(player1,UP);
                 pd1 = UP;
                 }
         }
-        /* if(SDL_GameControllerGetButton(controller,SDL_CONTROLLER_BUTTON_DPAD_DOWN)){
-            movePlayer(player1,DOWN);
-            pd1 = DOWN;
-            if(checkCollision(player1->position,WallRect2)){
-                movePlayer(player1,UP);
-                pd1 = UP;
-                }
-        }
-        if(SDL_GameControllerGetButton(controller,SDL_CONTROLLER_BUTTON_DPAD_UP)){
-            movePlayer(player1,UP);
-            pd1 = UP;
-            if(checkCollision(player1->position,WallRect1)){
-                movePlayer(player1,DOWN);
-                pd1 = DOWN;
-                }
-        }*/
+        
         //Other events
         while(SDL_PollEvent(&evt)){
             if(evt.type == SDL_QUIT){
@@ -253,8 +228,9 @@ void gameLoop(){
         moveBall(ball,1,1);
 
         //Check collisions
-        if(checkCollision(ball->rect,WallRect1)||checkCollision(ball->rect,WallRect2)){
-            SDL_SetTextureColorMod(textures[1],255,255,255);
+        if(checkCollision(ball->rect,wall1->position)||checkCollision(ball->rect,wall2->position)){
+            SDL_SetTextureColorMod(wall2->txt,255,255,255);
+            SDL_SetTextureColorMod(wall1->txt,255,255,255);
             SDL_SetTextureColorMod(textures[4],255,255,255);
             ball->y_speed = -(ball->y_speed);
             playSound(&audio,wall_hit_sound);
@@ -263,7 +239,8 @@ void gameLoop(){
         }
         else{
             if(wlight_counter<=0){
-                SDL_SetTextureColorMod(textures[1],125,125,125);
+                SDL_SetTextureColorMod(wall2->txt,125,125,125);
+                SDL_SetTextureColorMod(wall1->txt,125,125,125);
                 SDL_SetTextureColorMod(textures[4],125,125,125);
                 wlight_counter = WLIGTH_COUNTER_DEFAULT;
             }

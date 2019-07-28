@@ -46,12 +46,14 @@ void playMusic(Audio* au,int ind, bool loop){
 void quitAudio(Audio* au){
     for(int i=0;i<au->cnk_size;i++){
         Mix_FreeChunk(au->chunks[i]);
-        free(au->chunks[i]);
+        
     }
+    free(au->chunks);
     for(int i=0;i<au->msc_size;i++){
         Mix_FreeMusic(au->musics[i]);
-        free(au->musics[i]);
+        
     }
+    free(au->musics);
     au->cnk_size = 0;
     au->msc_size = 0;
     Mix_CloseAudio();

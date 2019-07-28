@@ -45,17 +45,10 @@
             "args": [
                 
                 "main.c",
-                //"ball.h",
                 "ball.c",
-                //"player.h",
                 "player.c",
-                //"text.h",
                 "text.c",
-                //"utils.h",
                 "utils.c",
-                //"game_state.h",
-                "game_state.c",
-                //"audio.h",
                 "audio.c",
                 "-o./bin/Debug/pong",
                 "-lSDL2main",
@@ -65,7 +58,8 @@
                 "-w",
                 "-Wextra",
                 "-Wfatal-errors",
-                "-Wall"
+                "-Wall",
+                "-O3"
             ]
         }
     ]

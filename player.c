@@ -8,12 +8,12 @@ void initPlayer(Player* p, int number, int speed, int tex_index){
         p->position.x = 0;
         p->position.y = 225;
         p->position.w = 20;
-        p->position.h = 125;
+        p->position.h = 80;
     }else{
-        p->position.x = 775;
+        p->position.x = 780;
         p->position.y = 225;
         p->position.w = 20;
-        p->position.h = 125;
+        p->position.h = 80;
     }
 }
 

@@ -47,9 +47,9 @@ Sprite* wall1;
 Sprite* wall2;
 SDL_Rect Player1Name = {0,28,20,20};
 SDL_Rect Player2Name = {640,28,20,20};
-SDL_Rect FPSRect = {400,600-56,15,15};
+SDL_Rect FPSRect = {400,600-56,10,10};
 SDL_Rect FPSStrRect = {330,600-56,15,15};
-SDL_Rect Logo = {130,235,540,130};
+Sprite* logo;
 
 char fps[10];
 char *FPS_str = "FPS:";
@@ -108,13 +108,13 @@ void initGame(const char* title,int width,int height){
     textures[0] = loadTexture(renderer,"textures/ball.png");
     textures[2] = loadTexture(renderer,"textures/player1.png");
     textures[3] = loadTexture(renderer,"textures/player2.png");
-    textures[4] = loadTexture(renderer,"textures/logo.png");
 
     wall1 = newSprite(renderer,"textures/wall.png");
     wall2 = newSprite(renderer,"textures/wall.png");
-    
+    logo = newSprite(renderer,"textures/logo.png");
     moveSprite(wall1,0,0);
     moveSprite(wall2,0,575);
+    moveSprite(logo,130,235);
 
     hit_sound = loadSound(&audio,"hit.wav");
     //printf("Mix_LoadWAV(\"hit.wav\"): %s\n", Mix_GetError());
@@ -134,7 +134,7 @@ void render(){
         
         
         //this will be the render function
-        SDL_RenderCopy(renderer,textures[4], NULL, &Logo);
+        SDL_RenderCopy(renderer,logo->txt, NULL, &logo->position);
         SDL_RenderCopy(renderer,wall1->txt,NULL,&wall1->position);
         SDL_RenderCopy(renderer,wall2->txt,NULL,&wall2->position);
         
@@ -231,7 +231,7 @@ void gameLoop(){
         if(checkCollision(ball->rect,wall1->position)||checkCollision(ball->rect,wall2->position)){
             SDL_SetTextureColorMod(wall2->txt,255,255,255);
             SDL_SetTextureColorMod(wall1->txt,255,255,255);
-            SDL_SetTextureColorMod(textures[4],255,255,255);
+            SDL_SetTextureColorMod(logo->txt,255,255,255);
             ball->y_speed = -(ball->y_speed);
             playSound(&audio,wall_hit_sound);
             
@@ -241,7 +241,7 @@ void gameLoop(){
             if(wlight_counter<=0){
                 SDL_SetTextureColorMod(wall2->txt,125,125,125);
                 SDL_SetTextureColorMod(wall1->txt,125,125,125);
-                SDL_SetTextureColorMod(textures[4],125,125,125);
+                SDL_SetTextureColorMod(logo->txt,125,125,125);
                 wlight_counter = WLIGTH_COUNTER_DEFAULT;
             }
             else{
@@ -325,11 +325,14 @@ void gameLoop(){
 
 void quitGame(){
     //Free memory
+    freeSprite(wall1);
+    freeSprite(wall2);
+    freeSprite(logo);
 
     for(int i=0;i<4;i++){
         SDL_DestroyTexture(textures[i]);
     }
-
+    
     SDL_DestroyTexture(txt.chrSheet);
 
     //Quit modules
@@ -357,8 +360,8 @@ int main(int argc, char* argv[]){
     player2=&p2;
     ball=&b;
 
-    initPlayer(player1,1,8,2);
-    initPlayer(player2,2,8,3);
+    initPlayer(player1,1,10,2);
+    initPlayer(player2,2,10,3);
     initBall(ball,0,30);
     
     changeMusicVolume(64);

@@ -17,7 +17,7 @@
 #define WLIGTH_COUNTER_DEFAULT 30
 #define FPS_120 8
 #define FPS_100 9
-#define FPS_60 15
+#define FPS_60 16
 
 //Window and renderer, init is in the corresponding function
 SDL_Window* window;
@@ -71,7 +71,8 @@ Uint32 fps_lasttime = 0; //the last recorded time.
 Uint32 fps_current; //the current FPS.
 int wlight_counter = WLIGTH_COUNTER_DEFAULT;//lighting effect on wall hit by the walls
 
-//SDL_GameController* controller;
+SDL_Joystick* controller1;
+SDL_Joystick* controller2;
 
 void initGame(const char* title,int width,int height){
 //Init SDL and the game state
@@ -104,7 +105,7 @@ void initGame(const char* title,int width,int height){
     SDL_SetWindowIcon(window,icon);
     audio = initAudio(44100,AUDIO_S16SYS,2,2048,2,1);
 
-    //Only 5 textures used
+    //TODO: Convert all textures to Sprite objects
     textures[0] = loadTexture(renderer,"textures/ball.png");
     textures[2] = loadTexture(renderer,"textures/player1.png");
     textures[3] = loadTexture(renderer,"textures/player2.png");
@@ -112,6 +113,7 @@ void initGame(const char* title,int width,int height){
     wall1 = newSprite(renderer,"textures/wall.png");
     wall2 = newSprite(renderer,"textures/wall.png");
     logo = newSprite(renderer,"textures/logo.png");
+
     moveSprite(wall1,0,0);
     moveSprite(wall2,0,575);
     moveSprite(logo,130,235);
@@ -122,7 +124,17 @@ void initGame(const char* title,int width,int height){
     //printf("Mix_LoadWAV(\"wall_hit.wav\"): %s\n", Mix_GetError());
     music = loadMusic(&audio,"interstellar_odyssey_125.ogg");
     //printf("Mix_LoadWAV(\"music.wav\"): %s\n", Mix_GetError());
+    
+    //To be fixed:
+    /*
+    1) Add a loop to check how many controllers are present
+    2) Check which controller is which by adding a "press a button on controller 1"
+     */
+    controller1 = SDL_JoystickOpen(2);
+    printf("Name: %s\n", SDL_JoystickNameForIndex(2));
 
+    controller2 = SDL_JoystickOpen(1);
+    printf("Name: %s\n", SDL_JoystickNameForIndex(1));
 
 }
     
@@ -175,12 +187,16 @@ void gameLoop(){
         //get keyboard input
         const Uint8* keys = SDL_GetKeyboardState(NULL);
 
-        //player 2
+        Sint16 y_move1,y_move2;
+        y_move1 = SDL_JoystickGetAxis(controller1, 1);
+        y_move2 = SDL_JoystickGetAxis(controller2, 1);
         if(keys[SDL_SCANCODE_ESCAPE]){
                    running = 0;
                }
         
-        if(keys[SDL_SCANCODE_UP]){
+        //player 2
+        
+        if(keys[SDL_SCANCODE_UP] || y_move2 < -256){
             movePlayer(player2,UP);
             pd2 = UP;
             if(checkCollision(player2->position,wall1->position)){
@@ -189,7 +205,7 @@ void gameLoop(){
             }
         }
 
-        if(keys[SDL_SCANCODE_DOWN]){
+        if(keys[SDL_SCANCODE_DOWN] || y_move2 > 256){
             movePlayer(player2,DOWN);
             pd2 = DOWN;
             if(checkCollision(player2->position,wall2->position)){
@@ -199,7 +215,7 @@ void gameLoop(){
         }
 
         //Player 1
-        if(keys[SDL_SCANCODE_E]){
+        if(keys[SDL_SCANCODE_E]||y_move1 < -256){
             movePlayer(player1,UP);
             pd1 = UP;
             if(checkCollision(player1->position,wall1->position)){
@@ -208,7 +224,7 @@ void gameLoop(){
             }
         }
 
-        if(keys[SDL_SCANCODE_D]){
+        if(keys[SDL_SCANCODE_D]||y_move1 > 256){
             movePlayer(player1,DOWN);
             pd1 = DOWN;
             if(checkCollision(player1->position,wall2->position)){
@@ -217,6 +233,8 @@ void gameLoop(){
                 }
         }
         
+        
+
         //Other events
         while(SDL_PollEvent(&evt)){
             if(evt.type == SDL_QUIT){
@@ -308,8 +326,8 @@ void gameLoop(){
         
         fps_frames++;
         dt = SDL_GetTicks()-time;
-        if(dt < FPS_100){
-            SDL_Delay(FPS_100-dt);
+        if(dt < FPS_60){
+            SDL_Delay(FPS_60-dt);
         }
         if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
          {

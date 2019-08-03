@@ -13,7 +13,7 @@ typedef struct{
 
 } Ball;
 
-void initBall(Ball* b,int tex_ind, int rad);
+void initBall(Ball* b,int tex_ind, int rad, int speed);
 void moveBall(Ball* b,int xs, int ys);
 
 #endif // BALL_H_INCLUDED

@@ -20,7 +20,7 @@ typedef struct {
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filename);
 int checkCollision(SDL_Rect rect1,SDL_Rect rect2);
 void clearScreen(SDL_Renderer* renderer);
-Particles* genParticles(int x, int y,int numParticles, Direction d);
+Particles* genParticles(int x, int y,int numParticles, Direction d, int lifetime);
 void killParticles(Particles* p);
 void drawParticles(SDL_Renderer* rnd, Particles* p);
 

@@ -1,6 +1,6 @@
 #include "ball.h"
 
-void initBall(Ball* b,int tex_ind, int rad){
+void initBall(Ball* b,int tex_ind, int rad, int speed){
     //fixed for 800x600 window, it can be changed to handle different resolutions
     b->rect.x = 400;
     b->rect.y = 300;
@@ -10,11 +10,11 @@ void initBall(Ball* b,int tex_ind, int rad){
     b->tex_index = tex_ind;
 
     if(dir%2){
-        b->x_speed = 8;
+        b->x_speed = speed;
         b->y_speed = 0;
     }
     else{
-        b->x_speed = -8;
+        b->x_speed = -speed;
         b->y_speed = 0;
     }
 

@@ -70,6 +70,8 @@ Uint32 fps_frames = 0; //frames passed since the last recorded fps.
 Uint32 fps_lasttime = 0; //the last recorded time.
 Uint32 fps_current; //the current FPS.
 int wlight_counter = WLIGTH_COUNTER_DEFAULT;//lighting effect on wall hit by the walls
+Direction pd1 = UP;
+Direction pd2 = DOWN;
 
 SDL_Joystick* controller1;
 SDL_Joystick* controller2;
@@ -90,7 +92,10 @@ void initGame(const char* title,int width,int height){
         printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
         exit(-1);
     } */
-
+    //TODO:
+    //Add a trigger to enable disable VSYNC.
+    //When VSYNC enabled, check framerate and adapt physiscs
+    //Otherwisen physics/events at 100Hz
     renderer = SDL_CreateRenderer(window,0,SDL_RENDERER_ACCELERATED);
     /* if (renderer == NULL) {
         // Unrecoverable error, exit here.
@@ -171,18 +176,11 @@ void render(){
 
 }
 
-
-void gameLoop(){
-    running = 1;
+void handle_events(){
     SDL_Event evt;
-    Direction pd1 = UP;
-    Direction pd2 = DOWN;
-    fps_lasttime = SDL_GetTicks();
-    Uint32 time = SDL_GetTicks();
     
-    while(running){
-
-        SDL_PumpEvents();
+    
+    SDL_PumpEvents();
 
         //get keyboard input
         const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -273,7 +271,7 @@ void gameLoop(){
             
             playSound(&audio,hit_sound);
             //Generate particle effect
-            p = genParticles(ball->rect.x,ball->rect.y,500,LEFT);
+            p = genParticles(ball->rect.x,ball->rect.y,500,LEFT,300);
 
         }
         
@@ -285,19 +283,19 @@ void gameLoop(){
             playSound(&audio,hit_sound);
            
             //Generate particle effect
-            p = genParticles(ball->rect.x,ball->rect.y,500,RIGHT);
+            p = genParticles(ball->rect.x,ball->rect.y,500,RIGHT,100);
 
         }
 
         //Score update
 		if(ball->rect.x <0){
 			increaseScore(player2,1);
-			initBall(ball,0,30);
+			initBall(ball,0,30,6);
 
 
 		}else if(ball->rect.x > 800){
 			increaseScore(player1,1);
-			initBall(ball,0,30);
+			initBall(ball,0,30,6);
 		}
 
         //check if particles are still alive
@@ -309,6 +307,25 @@ void gameLoop(){
         //Convert scores to string
         snprintf(p1_score,200,"%d",player1->score);
         snprintf(p2_score,200,"%d",player2->score);
+
+        
+}
+void gameLoop(){
+    running = 1;
+    
+    fps_lasttime = SDL_GetTicks();
+    Uint32 time = SDL_GetTicks();
+    
+    while(running){
+        
+         dt = SDL_GetTicks()-time;
+        if(dt > 8){
+            handle_events();
+            time = SDL_GetTicks();
+            //SDL_Delay(FPS_60-dt);
+        }
+        
+        
 
         render();
 
@@ -325,18 +342,15 @@ void gameLoop(){
         //Limit framerate to 60fps
         
         fps_frames++;
-        dt = SDL_GetTicks()-time;
-        if(dt < FPS_60){
-            SDL_Delay(FPS_60-dt);
-        }
+        
         if (fps_lasttime < SDL_GetTicks() - FPS_INTERVAL*1000)
          {
             fps_lasttime = SDL_GetTicks();
             fps_current = fps_frames;
             fps_frames = 0;
         }
-        
-        time = SDL_GetTicks();
+        //lock max framerate
+       SDL_Delay(1);
     }//big while
 }//end gameloop function
 
@@ -380,7 +394,7 @@ int main(int argc, char* argv[]){
 
     initPlayer(player1,1,10,2);
     initPlayer(player2,2,10,3);
-    initBall(ball,0,30);
+    initBall(ball,0,30, 6);
     
     changeMusicVolume(64);
     

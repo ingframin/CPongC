@@ -48,7 +48,7 @@ void clearScreen(SDL_Renderer* renderer){
 
 }
 
-Particles* genParticles(int x, int y,int numParticles, Direction d){
+Particles* genParticles(int x, int y,int numParticles, Direction d, int lifetime){
 	SDL_Point *particles = (SDL_Point*) malloc(numParticles*sizeof(SDL_Point));
 	for(int i=0;i<numParticles;i++){
 		int signx = (d==RIGHT)?-1:1;
@@ -60,7 +60,7 @@ Particles* genParticles(int x, int y,int numParticles, Direction d){
 	p->points = particles;
 	p->d = d;
 	p->numpoints = numParticles;
-	p->lifetime = 30;
+	p->lifetime = lifetime;
 	return p;
 }
 
@@ -78,7 +78,7 @@ void drawParticles(SDL_Renderer* rnd, Particles* p){
 	}
 	SDL_RenderDrawPoints(rnd,p->points,p->numpoints);
 	for(int i=0;i<p->numpoints;i++){
-		p->points[i].x += (p->d == LEFT)?rand()%10:-rand()%10;
-		p->points[i].y += (rand()%2)?rand()%10:-rand()%10;
+		p->points[i].x += (p->d == LEFT)?rand()%8:-rand()%8;
+		p->points[i].y += (rand()%2)?rand()%8:-rand()%8;
 	}
 }

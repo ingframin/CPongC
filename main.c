@@ -319,7 +319,7 @@ void gameLoop(){
     while(running){
         
          dt = SDL_GetTicks()-time;
-        if(dt > 8){
+        if(dt > 10){
             handle_events();
             time = SDL_GetTicks();
             //SDL_Delay(FPS_60-dt);
@@ -394,7 +394,7 @@ int main(int argc, char* argv[]){
 
     initPlayer(player1,1,10,2);
     initPlayer(player2,2,10,3);
-    initBall(ball,0,30, 6);
+    initBall(ball,0,30, 8);
     
     changeMusicVolume(64);
     

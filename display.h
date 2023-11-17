@@ -10,7 +10,7 @@ typedef struct {
 } Display;
 
 Display* newDisplay(const char* title, int width, int height);
-SDL_Texture* loadTexture(const char* path);
+SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filename);
 //void renderDisplay(Display* disp, SDL_Texture** textures,SDL_Rect* positions, int n_objects);
 void clearDisplay(Display* disp);
 

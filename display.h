@@ -5,6 +5,8 @@
 typedef struct {
     SDL_Window* wnd;
     SDL_Renderer* rnd;
+    int width;
+    int height;
 } Display;
 
 Display* newDisplay(const char* title, int width, int height);

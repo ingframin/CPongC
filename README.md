@@ -7,6 +7,7 @@ It requires GCC and SDL2.
 A version of SDL2 (2.0.5) is included but I strongly suggest to download the last one from the website: www.libsdl.org.
 
 All the credits and a huge thank you for SDL2 go to Sam Lantiga, the defunct Loki Software and all the development team.
+Music: Interstellar Odussey, by Patrick de Artega -> https://patrickdearteaga.com/en/royalty-free-music/
 
 ## Controls
 
@@ -37,3 +38,4 @@ I made the sprites myself with Affinity Designer. They are a perfect example of 
 Feel free to reuse them at your will.
 
 All my code is provided with BSD license.
+

@@ -4,14 +4,14 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -Wfatal-errors -O3
+CFLAGS = -Wall -Wextra -Wfatal-errors -O3 -finline-functions -fsanitize=address
 
 # Output directory
 BINDIR = bin/Debug
 TARGET = $(BINDIR)/pong
 
 # Source files - currently only main.c in root
-SRCS = main.c display.c
+SRCS = main.c display.c sprite.c
 
 # For the full game (uncomment and add source files as they're moved from old/)
 # SRCS = main.c ball.c player.c text.c utils.c audio.c display.c sprite.c main_menu.c
@@ -26,7 +26,7 @@ SDL_LIBS += -lSDL3_image -lSDL3_sound
 
 # Final flags
 CFLAGS += $(SDL_CFLAGS)
-LDFLAGS = $(SDL_LIBS)
+LDFLAGS = $(SDL_LIBS) -fsanitize=address
 
 all: $(TARGET)
 

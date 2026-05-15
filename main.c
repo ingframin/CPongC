@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include "display.h"
+#include "sprite.h"
 
 const int WIDTH = 1920;
 const int HEIGHT = 1080;
@@ -16,8 +17,15 @@ int main(int argc, char** argv){
     SDL_SetAppMetadata("CPongC3", "3.0", "eu.ingframin.cpongc3");    
 
     Display* disp = DISP_newDisplay("CpongC3",WIDTH,HEIGHT);
-    SDL_Texture* ball = DISP_loadTexture(disp->rnd, "./textures/ball.png");
-    SDL_FRect ballrect = {WIDTH/2,HEIGHT/2,30.0,30.0};
+    DrawArray* drawarray = SPRT_newDrawArray(disp,6);
+    int ball_idx = SPRT_loadSpriteIntoDrawArray(disp,drawarray,"./textures/ball.png");
+    int p1 = SPRT_loadSpriteIntoDrawArray(disp,drawarray,"./textures/player1.png");
+    int p2 = SPRT_loadSpriteIntoDrawArray(disp,drawarray,"./textures/player2.png");
+    int wall_up = SPRT_loadSpriteIntoDrawArray(disp,drawarray,"./textures/wall.png");
+    int wall_down = SPRT_loadSpriteIntoDrawArray(disp,drawarray,"./textures/wall.png");
+    int logo = SPRT_loadSpriteIntoDrawArray(disp,drawarray,"./textures/logo.png");
+    
+    SPRT_moveSpriteAbs(SPRT_getSpriteFromDrawArray(drawarray,ball_idx),(float)WIDTH/2,(float)HEIGHT/2);
     bool running = true;
 
     while (running) {
@@ -29,11 +37,12 @@ int main(int argc, char** argv){
             }
         }
         clearDisplay(disp);
-        SDL_RenderTexture(disp->rnd,ball,NULL,&ballrect);
+        SPRT_drawDrawArray(disp,drawarray);
         SDL_RenderPresent(disp->rnd);
         
     }
 
+    SPRT_freeDrawArray(drawarray);
     SDL_DestroyRenderer(disp->rnd);
     SDL_DestroyWindow(disp->wnd);
 

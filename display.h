@@ -19,7 +19,7 @@ typedef struct drawarray{
 
 Display* DISP_newDisplay(const char* title, int width, int height);
 DrawArray* DISP_newDrawArray(SDL_Renderer* renderer, Uint16 length);
-SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filename);
+SDL_Texture* DISP_loadTexture(SDL_Renderer* renderer, const char* filename);
 //void renderDisplay(Display* disp, SDL_Texture** textures,SDL_Rect* positions, int n_objects);
 void clearDisplay(Display* disp);
 

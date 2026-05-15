@@ -16,7 +16,7 @@ int main(int argc, char** argv){
     SDL_SetAppMetadata("CPongC3", "3.0", "eu.ingframin.cpongc3");    
 
     Display* disp = DISP_newDisplay("CpongC3",WIDTH,HEIGHT);
-    SDL_Texture* ball = loadTexture(disp->rnd, "./textures/ball.png");
+    SDL_Texture* ball = DISP_loadTexture(disp->rnd, "./textures/ball.png");
     SDL_FRect ballrect = {WIDTH/2,HEIGHT/2,30.0,30.0};
     bool running = true;
 

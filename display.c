@@ -10,7 +10,7 @@ static Uint32 hash32(Uint32 x, Uint32 y) {
     return x ^ ((y >> 16) ^ y);
 }
 
-SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filename){
+SDL_Texture* DISP_loadTexture(SDL_Renderer* renderer, const char* filename){
     SDL_Texture* txt = IMG_LoadTexture(renderer,filename);
     return txt;
 }

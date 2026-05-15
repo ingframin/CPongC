@@ -20,7 +20,7 @@ int loadSound(Audio* au,const char* path);
 int loadMusic(Audio* au,const char* path);
 void playSound(Audio* au,int ind);
 void playMusic(Audio* au,int ind, bool loop);
-void quitAudio();
+void quitAudio(Audio* au);
 void changeSoundVolume(int channel, int vol);
 void changeMusicVolume(int vol);
 #endif

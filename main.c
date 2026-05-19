@@ -36,15 +36,14 @@ int main(int argc, char** argv){
                 running = false;
             }
         }
-        clearDisplay(disp);
+        DISP_clearDisplay(disp);
         SPRT_drawDrawArray(disp,drawarray);
-        SDL_RenderPresent(disp->rnd);
+        DISP_update(disp);
         
     }
 
     SPRT_freeDrawArray(drawarray);
-    SDL_DestroyRenderer(disp->rnd);
-    SDL_DestroyWindow(disp->wnd);
+    DISP_freeDisplay(disp);
 
     
     SDL_Quit();

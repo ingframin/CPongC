@@ -11,25 +11,34 @@ static Uint32 hash32(Uint32 x, Uint32 y) {
 }
 
 SDL_Texture* DISP_loadTexture(Display* disp, const char* filename){
-    SDL_Texture* txt = IMG_LoadTexture(disp->rnd,filename);
+    SDL_Texture* txt = IMG_LoadTexture(disp->renderer,filename);
     return txt;
 }
 
 Display* DISP_newDisplay(const char* title, int width, int height){
     Display* disp = (Display*)malloc(sizeof(Display));
-    disp->wnd = SDL_CreateWindow("CPongC",width,height,SDL_WINDOW_OPENGL);
-    disp->rnd = SDL_CreateRenderer(disp->wnd,NULL);
+    disp->window = SDL_CreateWindow(title, width, height, SDL_WINDOW_OPENGL);
+    disp->renderer = SDL_CreateRenderer(disp->window, NULL);
     disp->width = width;
     disp->height = height;
     return disp;
-    
 }
 
 
 
-void clearDisplay(Display* disp){
-    SDL_SetRenderDrawColor(disp->rnd,0,0,0,255);
+void DISP_clearDisplay(Display* disp){
+    SDL_SetRenderDrawColor(disp->renderer,0,0,0,255);
     //Screen is black
-    SDL_RenderClear(disp->rnd);
+    SDL_RenderClear(disp->renderer);
 
+}
+
+void DISP_update(Display* disp){
+    SDL_RenderPresent(disp->renderer);
+}
+
+void DISP_freeDisplay(Display* disp){
+    if (disp->renderer) SDL_DestroyRenderer(disp->renderer);
+    if (disp->window) SDL_DestroyWindow(disp->window);
+    free(disp);
 }

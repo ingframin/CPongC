@@ -39,7 +39,7 @@ DrawArray* SPRT_newDrawArray(Display* disp, Uint16 length){
     
     arr->current = 0;
     arr->length = length;
-    arr->drawarray_id = hash32((Uint32)(uintptr_t)disp->rnd, (Uint32)length);
+    arr->drawarray_id = hash32((Uint32)(uintptr_t)disp->renderer, (Uint32)length);
     
     return arr;
 }
@@ -86,7 +86,7 @@ void SPRT_moveSpriteAbs(Sprite* sprt, float x, float y){
 
 void SPRT_drawSprite(Display* disp, Sprite* sprt){
     if (!sprt->to_draw) return;
-    SDL_RenderTexture(disp->rnd, sprt->txt, NULL, &sprt->rectangle);
+    SDL_RenderTexture(disp->renderer, sprt->txt, NULL, &sprt->rectangle);
 }
 
 void SPRT_drawDrawArray(Display* disp, DrawArray* arr){

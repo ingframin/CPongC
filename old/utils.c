@@ -69,14 +69,14 @@ void killParticles(Particles* p){
 	free(p);
 }
 
-void drawParticles(SDL_Renderer* rnd, Particles* p){
+void drawParticles(SDL_Renderer* renderer, Particles* p){
 	if(p->d == RIGHT){
-		SDL_SetRenderDrawColor(rnd,64,255,64,255);
+		SDL_SetRenderDrawColor(renderer,64,255,64,255);
 	}
 	else{
-		SDL_SetRenderDrawColor(rnd,255,64,64,255);
+		SDL_SetRenderDrawColor(renderer,255,64,64,255);
 	}
-	SDL_RenderDrawPoints(rnd,p->points,p->numpoints);
+	SDL_RenderDrawPoints(renderer,p->points,p->numpoints);
 	for(int i=0;i<p->numpoints;i++){
 		p->points[i].x += (p->d == LEFT)?rand()%8:-rand()%8;
 		p->points[i].y += (rand()%2)?rand()%8:-rand()%8;

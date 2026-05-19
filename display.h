@@ -4,8 +4,8 @@
 #include <SDL3_image/SDL_image.h>
 
 typedef struct {
-    SDL_Window* wnd;
-    SDL_Renderer* rnd;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
     int width;
     int height;
 } Display;
@@ -16,6 +16,9 @@ Display* DISP_newDisplay(const char* title, int width, int height);
 
 SDL_Texture* DISP_loadTexture(Display* disp, const char* filename);
 
-void clearDisplay(Display* disp);
+void DISP_clearDisplay(Display* disp);
 
+void DISP_update(Display* disp);
+
+void DISP_freeDisplay(Display* disp);
 #endif

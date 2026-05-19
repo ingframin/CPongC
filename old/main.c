@@ -159,13 +159,13 @@ void render(){
         SDL_RenderCopy(renderer,textures[player2->tex_index],NULL,&(player2->position));
         SDL_RenderCopy(renderer,textures[ball->tex_index],NULL,&ball->rect);
 
-        writeTxt(&txt,&score_p1_rect,p1_score,renderer);
-        writeTxt(&txt,&score_p2_rect,p2_score,renderer);
-        writeTxt(&txt,&Player1Name,"Player 1",renderer);
-        writeTxt(&txt,&Player2Name,"Player 2",renderer);
-        writeTxt(&txt,&FPSStrRect,FPS_str,renderer);
+        TXT_writeTxt(&txt,&score_p1_rect,p1_score,renderer);
+        TXT_writeTxt(&txt,&score_p2_rect,p2_score,renderer);
+        TXT_writeTxt(&txt,&Player1Name,"Player 1",renderer);
+        TXT_writeTxt(&txt,&Player2Name,"Player 2",renderer);
+        TXT_writeTxt(&txt,&FPSStrRect,FPS_str,renderer);
         snprintf(fps,10,"%d",fps_current);
-        writeTxt(&txt,&FPSRect,fps,renderer);
+        TXT_writeTxt(&txt,&FPSRect,fps,renderer);
         //Careful with this! 
         if(p!=NULL){
             drawParticles(renderer,p);
@@ -382,7 +382,7 @@ int main(int argc, char* argv[]){
     initGame("F Pong",800,600);
 
     //txt is global
-    initTextRenderer(&txt,renderer);
+    TXT_initTextRenderer(&txt,renderer);
 
     Player p1;
     Player p2;

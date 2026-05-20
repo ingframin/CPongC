@@ -29,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 double vec2_mod(vec2 v)
 {
-  return sqrt(v.x * v.x + v.y * v.y);
+  return hypot(v.x, v.y);
 }
 
 vec2 vec2_normalize(vec2 v)
@@ -77,7 +77,7 @@ double vec2_distanceTo(vec2 v, vec2 other)
 {
   double dx = other.x - v.x;
   double dy = other.y - v.y;
-  return sqrt(dx * dx + dy * dy);
+  return hypot(dx, dy);
 }
 
 double vec2_angleTo(vec2 v, vec2 other)

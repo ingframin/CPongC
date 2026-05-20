@@ -4,7 +4,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -Wfatal-errors -O3 -finline-functions -fsanitize=address -mavx
+CFLAGS = -Wall -Wextra -Wfatal-errors -O3 -finline-functions -fsanitize=address
 
 # Output directory
 BINDIR = bin/Debug

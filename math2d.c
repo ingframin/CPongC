@@ -29,10 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 double vec2_mod(vec2 v)
 {
-  __m256d vec = _mm256_set_pd(0, 0, v.y, v.x);
-  __m256d squared = _mm256_mul_pd(vec, vec);
-  __m128d sum128 = _mm_add_pd(_mm256_extractf128_pd(squared, 0), _mm256_extractf128_pd(squared, 1));
-  return sqrt(_mm_cvtsd_f64(sum128));
+  return sqrt(v.x * v.x + v.y * v.y);
 }
 
 vec2 vec2_normalize(vec2 v)
@@ -48,35 +45,17 @@ vec2 vec2_normalize(vec2 v)
 
 vec2 vec2_add(vec2 v, vec2 other)
 {
-  
-  __m256d v1 = _mm256_loadu_pd(&v.x);  // Load x,y (upper 128 bits unused)
-  __m256d v2 = _mm256_loadu_pd(&other.x);
-  __m256d result = _mm256_add_pd(v1, v2);
-  vec2 r;
-  _mm256_storeu_pd(&r.x, result);
-  return r;
+  return (vec2){v.x + other.x, v.y + other.y};
 }
 
 vec2 vec2_sub(vec2 v, vec2 other)
 {
-  
-  __m256d v1 = _mm256_loadu_pd(&v.x);
-  __m256d v2 = _mm256_loadu_pd(&other.x);
-  __m256d result = _mm256_sub_pd(v1, v2);
-  vec2 r;
-  _mm256_storeu_pd(&r.x, result);
-  return r;
+  return (vec2){v.x - other.x, v.y - other.y};
 }
 
 vec2 vec2_mul_scalar(vec2 v, double k)
 {
-  
-  __m256d vec = _mm256_loadu_pd(&v.x);
-  __m256d scale = _mm256_set1_pd(k);
-  __m256d result = _mm256_mul_pd(vec, scale);
-  vec2 r;
-  _mm256_storeu_pd(&r.x, result);
-  return r;
+  return (vec2){v.x * k, v.y * k};
 }
 
 vec2 vec2_add_scalar(vec2 v, double k)
@@ -96,15 +75,9 @@ bool vec2_isZero(vec2 v, double epsilon)
 
 double vec2_distanceTo(vec2 v, vec2 other)
 {
-  
-  __m256d dx = _mm256_set_pd(0, 0, other.y - v.y, other.x - v.x);
-  __m256d squared = _mm256_mul_pd(dx, dx);
-  
-  // Horizontal add: dx^2 + dy^2
-  __m128d low = _mm256_castpd256_pd128(squared);
-  __m128d high = _mm256_extractf128_pd(squared, 1);
-  __m128d sum128 = _mm_add_pd(low, high);
-  return sqrt(_mm_cvtsd_f64(sum128));
+  double dx = other.x - v.x;
+  double dy = other.y - v.y;
+  return sqrt(dx * dx + dy * dy);
 }
 
 double vec2_angleTo(vec2 v, vec2 other)
@@ -129,16 +102,7 @@ double vec2_angleTo(vec2 v, vec2 other)
 
 double vec2_dot(vec2 v, vec2 other)
 {
-  
-  __m256d v1 = _mm256_loadu_pd(&v.x);
-  __m256d v2 = _mm256_loadu_pd(&other.x);
-  __m256d product = _mm256_mul_pd(v1, v2);
-  
-  // Horizontal add: (x1*y1 + x2*y2) where x2,y2 are 0
-  __m128d low = _mm256_castpd256_pd128(product);
-  __m128d high = _mm256_extractf128_pd(product, 1);
-  __m128d sum128 = _mm_add_pd(low, high);
-  return _mm_cvtsd_f64(sum128);
+  return v.x * other.x + v.y * other.y;
 }
 
 vec2 vec2_rotate(vec2 v, double angle)
@@ -167,6 +131,9 @@ vec2 vec2_reverse(vec2 v)
   return (vec2){-v.x, -v.y};
 }
 
+// ======================
+// Vector Operations (free functions)
+// ======================
 
 double v2_dot(vec2 v1, vec2 v2)
 {

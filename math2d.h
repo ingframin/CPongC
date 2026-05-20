@@ -51,57 +51,35 @@ typedef struct Obstacle {
 
 double vec2_mod(vec2 v);
 vec2 vec2_normalize(vec2 v);
-double vec2_distanceTo(vec2 v, vec2 other);
-double vec2_angleTo(vec2 v, vec2 other);
-double vec2_dot(vec2 v, vec2 other);
+double vec2_distance(vec2 v1, vec2 v2);
+double vec2_angle(vec2 v1, vec2 v2);
+double vec2_dot(vec2 v1, vec2 v2);
 vec2 vec2_rotate(vec2 v, double angle);
 vec2 vec2_rotateLeftHalfPI(vec2 v);
 vec2 vec2_rotateRightHalfPI(vec2 v);
 vec2 vec2_reverse(vec2 v);
 bool vec2_isZero(vec2 v, double epsilon);
-vec2 vec2_add(vec2 v, vec2 other);
-vec2 vec2_sub(vec2 v, vec2 other);
+vec2 vec2_add(vec2 v1, vec2 v2);
+vec2 vec2_sub(vec2 v1, vec2 v2);
 vec2 vec2_mul_scalar(vec2 v, double k);
 vec2 vec2_add_scalar(vec2 v, double k);
-bool vec2_equal(vec2 v, vec2 other);
-
-// ======================
-// Vector Operations (free functions)
-// ======================
-
-double v2_dot(vec2 v1, vec2 v2);
-
-// ======================
-// Geometric Transformations
-// ======================
-
-vec2 v2_rotate_free(vec2 v, double angle);
-vec2 v2_rotateLeftHalfPI_free(vec2 v);
-vec2 v2_rotateRightHalfPI_free(vec2 v);
-vec2 v2_reverse_free(vec2 v);
-
-// ======================
-// Distance and Angle Calculations
-// ======================
-
-double v2_distance(vec2 v1, vec2 v2);
-double v2_angle_between(vec2 v1, vec2 v2);
+bool vec2_equal(vec2 v1, vec2 v2);
 
 // ======================
 // Interpolation
 // ======================
 
-vec2 v2_lerp(vec2 p1, vec2 p2, double t);
-vec2 v2_qspline(vec2 p1, vec2 p2, vec2 p3, double t);
-vec2 v2_cspline(vec2 p1, vec2 p2, vec2 p3, vec2 p4, double t);
-vec2* v2_interpolate(const vec2 vs[], size_t vs_len, double t);
-void v2_free_interpolated(vec2* points);
+vec2 vec2_lerp(vec2 p1, vec2 p2, double t);
+vec2 vec2_qspline(vec2 p1, vec2 p2, vec2 p3, double t);
+vec2 vec2_cspline(vec2 p1, vec2 p2, vec2 p3, vec2 p4, double t);
+vec2* vec2_interpolate(const vec2 vs[], size_t vs_len, double t);
+void vec2_free_interpolated(vec2* points);
 
 // ======================
 // Barycentric Coordinates
 // ======================
 
-barycoords v2_barycentric(vec2 A, vec2 B, vec2 C, vec2 P);
+barycoords vec2_barycentric(vec2 A, vec2 B, vec2 C, vec2 P);
 
 // ======================
 // Obstacle Calculations (Velocity Obstacle Method)
